@@ -3,7 +3,7 @@ body {
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
-    Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    Fira Sans, Droid Sans, Helvetica Neue, sans-serif, Roboto Slab;
 }
 
 a {
@@ -23,8 +23,87 @@ a {
 
 .scroll-to-top {
   position: fixed;
-  bottom: 0.5rem;
-  right: 0.5rem;
+  bottom: 1.5rem;
+  right: 1.5rem;
   animation: fadeIn 700ms ease-in-out 1s both;
   cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+  .scroll-to-top {
+    position: fixed;
+    bottom: 5rem;
+    right: 1.5rem;
+    animation: fadeIn 700ms ease-in-out 1s both;
+    cursor: pointer;
+  }
+}
+
+.social-media-links {
+  font-size: 35px;
+  cursor: pointer;
+  margin-right: 15px;
+  transition: transform 0.2s;
+}
+
+.social-media-links:hover {
+  color: #fca311;
+  transform: scale(1.2);
+}
+
+.image-gallery-left-nav .image-gallery-svg {
+  height: 50px;
+  width: 50px;
+}
+.image-gallery-right-nav .image-gallery-svg {
+  height: 50px;
+  width: 50px;
+}
+
+.image-gallery-content .image-gallery-slide .image-gallery-image {
+  max-height: calc(100vh - 80px);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.image-gallery-thumbnail .image-gallery-thumbnail-image {
+  vertical-align: middle;
+  width: 100%;
+  line-height: 0;
+  border-radius: 10px;
+}
+
+.image-gallery-thumbnail {
+  margin-top: 20px;
+}
+
+.react-multiple-carousel__arrow--right {
+  right: calc(1% + 1px) !important;
+}
+.react-multiple-carousel__arrow--left {
+  left: calc(1% + 1px) !important;
+}
+
+.react-multiple-carousel__arrow {
+  position: absolute;
+  outline: 0;
+  transition: all 0.5s;
+  border-radius: 35px;
+  border: 0;
+  background: rgba(0, 0, 0, 0.5);
+  min-width: 28px !important;
+  min-height: 28px !important;
+  opacity: 1;
+
+  cursor: pointer;
+  top: 50px;
+}
+
+.react-multiple-carousel__arrow::before {
+  font-size: 15px !important;
+  color: #fff;
+  display: block;
+  font-family: revicons;
+  text-align: center;
+  /* z-index: 2; */
+  position: relative;
 }

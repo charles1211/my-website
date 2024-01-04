@@ -1,69 +1,236 @@
-import { Box, Container, Grid, Typography } from '@mui/material';
+import { Box, Button, Divider, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 import type { NextPage } from 'next';
-import Lottie from 'lottie-react-web';
-import Zoom from 'react-reveal/Zoom';
-
-import helloAnination from '../public/animations/hello.json';
-import backgroundCity from '../public/animations/backgroundcity.json';
-import AboutMe from '../components/aboutMe';
-import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
+import { BsDownload } from 'react-icons/bs';
+import AboutMe from '../components/aboutMe';
+import Projects from '../components/projects';
+import { colors } from '../styles/theme/colors';
+import Footer from '../components/footer';
+import Contacts from '../components/contact';
+import ScrollToTopButton from '../common/scrollToTopButton';
 
 const Home: NextPage = () => {
-  const aboutSection: any = useRef();
   const router = useRouter();
 
-  useEffect(() => {
-    console.log(router);
-
-    console.log(aboutSection.current.offsetTop);
-  }, []);
+  const theme = useTheme();
+  const xl = useMediaQuery(theme.breakpoints.down('xl'));
+  const sm = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <>
-      <Grid container item xs={12} sx={{ padding: 3, backgroundColor: '#F2F5F7' }}>
-        <Grid item container justifyContent='center' xs={6}>
-          <Zoom>
-            <Box
-              boxShadow={5}
-              sx={{ borderRadius: '10%', width: '95%' }}
-              component='img'
-              src={'./images/me.jpg'}
-              alt='me'
-            />
-          </Zoom>
-        </Grid>
-        <Grid item container justifyContent='center' alignContent='center' xs={6}>
-          <Grid sx={{ position: 'absolute' }}>
-            <Lottie
-              height='100%'
-              width='100%'
-              options={{
-                animationData: backgroundCity,
-                loop: true,
-              }}
-            />
+      <Grid
+        container
+        justifyContent='center'
+        item
+        xs={12}
+        sx={{ padding: { xl: 3, xs: 3 }, mt: { lg: 20, xs: 3 } }}
+        id='home-section'
+      >
+        <Grid item xs={12} lg={10}>
+          <Grid container alignItems='center' item xs={12} lg={12}>
+            <Grid
+              item
+              container
+              justifyContent='center'
+              xs={12}
+              lg={6}
+              data-aos={sm ? '' : 'fade-left'}
+            >
+              <Grid item xs={12} lg={12}>
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: { lg: 75, xs: 40 },
+                    textAlign: { xs: 'center', lg: 'start' },
+                  }}
+                >
+                  Hello<span style={{ color: colors.tomato }}>.</span>
+                </Typography>
+              </Grid>
+              <Grid container item xs={12} lg={12} sx={{ position: 'relative' }}>
+                <Grid item xs={12} lg={2}>
+                  <span>
+                    <Divider
+                      sx={{
+                        position: 'absolute',
+                        height: 5,
+                        width: { lg: 300, xs: 100 },
+                        backgroundColor: colors.tomato,
+                        bottom: { lg: 25, xs: -4 },
+
+                        right: 0,
+                        ml: { lg: 0, xs: 'auto' },
+                        mr: { lg: 0, xs: 'auto' },
+                        left: { xl: -200, lg: -240, xs: 0 },
+                      }}
+                    />
+                  </span>
+                </Grid>
+                <Grid item xs={12} lg={10}>
+                  <Typography
+                    sx={{
+                      fontWeight: 300,
+                      fontSize: { lg: 60, xs: 30 },
+                      textAlign: { xs: 'center', lg: 'start' },
+                    }}
+                  >{`I'm Charles`}</Typography>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} lg={12}>
+                <Typography
+                  gutterBottom
+                  sx={{
+                    fontWeight: 700,
+                    color: colors.orange,
+                    fontSize: { lg: 75, xs: 30 },
+                    textAlign: { xs: 'center', lg: 'start' },
+                    mt: { lg: 0, xs: 3 },
+                  }}
+                >
+                  Front-end Developer
+                </Typography>
+              </Grid>
+              {!sm && (
+                <Grid
+                  container
+                  alignItems='center'
+                  justifyContent={sm ? 'center' : 'start'}
+                  item
+                  xs={12}
+                  lg={12}
+                >
+                  <Button
+                    size='large'
+                    variant='contained'
+                    color='primary'
+                    sx={{ mt: { lg: 2, xs: 0 }, border: `3px solid ${colors.tomato}` }}
+                  >
+                    <Typography
+                      sx={{
+                        fontSize: { lg: 25, xs: 15 },
+                        p: { lg: 1, xs: 0 },
+                        textTransform: 'none',
+                      }}
+                    >
+                      {' '}
+                      My resume
+                    </Typography>
+                    <BsDownload style={{ fontSize: sm ? 15 : 25, marginLeft: 10 }} />
+                  </Button>
+                </Grid>
+              )}
+            </Grid>
+            <Grid
+              item
+              container
+              justifyContent='center'
+              xs={12}
+              lg={6}
+              data-aos={sm ? '' : 'fade-right'}
+            >
+              <Box
+                sx={{
+                  borderRadius: '30% 70% 58% 42% / 30% 25% 75% 70%',
+                  width: { xl: 450, lg: 400, xs: '100%' },
+                  height: { xl: 450, lg: 400, xs: '100%' },
+                  objectFit: 'cover',
+                  borderColor: 'tomato',
+                  // borderStyle: 'solid',
+                  border: '7px solid tomato',
+                  filter: 'grayscale(40%)',
+                  boxShadow: '2px 2px 130px tomato',
+                  mt: { lg: 0, xs: 3 },
+                }}
+                component='img'
+                src={'./images/charles.jpg'}
+                alt='me'
+              />
+            </Grid>
+            {sm && (
+              <Grid
+                container
+                alignItems='center'
+                justifyContent={sm ? 'center' : 'start'}
+                item
+                xs={12}
+                lg={12}
+                sx={{ mt: 5, mb: 3 }}
+              >
+                <Button
+                  size='large'
+                  variant='contained'
+                  color='primary'
+                  sx={{ mt: { lg: 2, xs: 0 }, border: `3px solid ${colors.tomato}` }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: { lg: 25, xs: 15 },
+                      p: { lg: 1, xs: 0 },
+                      textTransform: 'none',
+                    }}
+                  >
+                    {' '}
+                    My resume
+                  </Typography>
+                  <BsDownload style={{ fontSize: sm ? 15 : 25, marginLeft: 10 }} />
+                </Button>
+              </Grid>
+            )}
           </Grid>
-          <Lottie
-            height='50%'
-            width='50%'
-            options={{
-              animationData: helloAnination,
-              loop: true,
-            }}
-          />
-          <Zoom>
-            <Typography variant='h1' sx={{ fontWeight: 400 }}>
-              I am Charles, a front-end developer
-            </Typography>
-          </Zoom>
         </Grid>
       </Grid>
-      <div className='section section2' ref={aboutSection}>
-        <Container maxWidth='xl'>
+      <Grid container item xs={12} sx={{ backgroundColor: colors.lightBlue, p: { lg: 4, xs: 2 } }}>
+        <Grid container justifyContent='center' item xs={4} lg={4} xl={2}>
+          <Typography color='GrayText' sx={{ fontSize: { lg: 35, xs: 20 } }}>
+            Typescript
+          </Typography>
+        </Grid>
+        <Grid container justifyContent='center' item xs={4} lg={4} xl={2}>
+          <Typography color='GrayText' sx={{ fontSize: { lg: 35, xs: 20 } }}>
+            Javascript
+          </Typography>
+        </Grid>
+        <Grid container justifyContent='center' item xs={4} lg={3} xl={1}>
+          <Typography color='GrayText' sx={{ fontSize: { lg: 35, xs: 20 } }}>
+            Node.js
+          </Typography>
+        </Grid>
+        <Grid container justifyContent='center' item xs={3} lg={3} xl={2}>
+          <Typography color='GrayText' sx={{ fontSize: { lg: 35, xs: 20 } }}>
+            React
+          </Typography>
+        </Grid>
+        <Grid container justifyContent='center' item xs={3} lg={3} xl={1}>
+          <Typography color='GrayText' sx={{ fontSize: { lg: 35, xs: 20 } }}>
+            Next.js
+          </Typography>
+        </Grid>
+        <Grid container justifyContent='center' item xs={3} lg={3} xl={2}>
+          <Typography color='GrayText' sx={{ fontSize: { lg: 35, xs: 20 } }}>
+            CSS
+          </Typography>
+        </Grid>
+        <Grid container justifyContent='center' item xs={3} lg={3} xl={2}>
+          <Typography color='GrayText' sx={{ fontSize: { lg: 35, xs: 20 } }}>
+            HTMLS
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid container justifyContent='center' item xs={12}>
+        <Grid item xs={10} sx={{ mt: 20 }} id='about-section'>
           <AboutMe />
-        </Container>
-      </div>
+        </Grid>
+      </Grid>
+      <Grid item xs={12} sx={{ p: { lg: 20, xs: 5 }, mt: { lg: 0, xs: 10 } }} id='project-section'>
+        <Projects />
+      </Grid>
+      <Grid item xs={12} id='contact-section'>
+        <Contacts />
+      </Grid>
+      <Grid item xs={12}>
+        <Footer />
+      </Grid>
+      <ScrollToTopButton />
     </>
   );
 };

@@ -4,17 +4,23 @@ import { red } from '@mui/material/colors';
 const lightThemeOptions: ThemeOptions = {
   palette: {
     primary: {
-      main: '#000000',
+      main: '#121F28',
     },
     secondary: {
-      main: '#424242',
+      main: '#FF715B',
       // secondary: "#4B4B4B",
     },
     error: {
       main: red.A400,
     },
     background: {
-      default: '#FFFFFF',
+      default: '#121F28',
+    },
+  },
+  typography: {
+    allVariants: {
+      color: 'white',
+      fontFamily: 'Roboto Slab',
     },
   },
 };
