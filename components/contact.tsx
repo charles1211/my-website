@@ -9,6 +9,8 @@ import {
   useTheme,
 } from '@mui/material';
 import { colors } from '../styles/theme/colors';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const styles = {
   bgImg: {
@@ -29,6 +31,40 @@ const Contacts = ({}: ContactsProps) => {
   const theme = useTheme();
   const xl = useMediaQuery(theme.breakpoints.down('xl'));
   const sm = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [initialValue, setInitialValue] = useState({
+    email: 'charlescabarrus99@gmail.com',
+    sender: '',
+    subject: '',
+    message: '',
+  });
+
+  function isValidEmail(email: string) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+
+  async function handleSubmit() {
+    if (initialValue.sender === '' || initialValue.subject === '' || initialValue.message === '') {
+      return toast.error('All fields required');
+    }
+    if (!isValidEmail(initialValue.sender)) {
+      return toast.error('Email is invalid');
+    }
+
+    await fetch(`https://formbold.com/s/94x0j`, {
+      method: 'POST',
+      body: JSON.stringify(initialValue),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    toast.success('Email sent!');
+    setInitialValue({
+      email: 'charlescabarrus99@gmail.com',
+      sender: '',
+      subject: '',
+      message: '',
+    });
+  }
+
   return (
     <Grid
       container
@@ -95,7 +131,11 @@ const Contacts = ({}: ContactsProps) => {
             </Grid>
             {!sm && (
               <Grid container alignItems='center' item xs={12} lg={12}>
-                <Button variant='contained' sx={{ backgroundColor: colors.tomato, marginRight: 5 }}>
+                <Button
+                  variant='contained'
+                  sx={{ backgroundColor: colors.tomato, marginRight: 5 }}
+                  onClick={handleSubmit}
+                >
                   <Typography sx={{ fontSize: 25, p: 1, textTransform: 'none', pl: 4, pr: 4 }}>
                     Submit
                   </Typography>
@@ -116,9 +156,14 @@ const Contacts = ({}: ContactsProps) => {
               <Grid item xs={12} lg={10}>
                 <TextField
                   fullWidth
-                  label='Name'
+                  label='Your email'
                   placeholder=' '
                   variant='standard'
+                  type='email'
+                  value={initialValue.sender}
+                  onChange={(e) => {
+                    setInitialValue({ ...initialValue, sender: e.target.value });
+                  }}
                   sx={{
                     '& .MuiInputBase-root': {
                       color: 'white',
@@ -135,16 +180,20 @@ const Contacts = ({}: ContactsProps) => {
                     },
                   }}
                   InputLabelProps={{
-                    style: { color: '#fff', fontSize: sm ? 20 : 25 },
+                    style: { color: colors.tomato, fontSize: sm ? 20 : 25 },
                   }}
                 />
               </Grid>
               <Grid item xs={12} lg={10}>
                 <TextField
                   fullWidth
-                  label='Email'
+                  label='Subject'
                   placeholder=' '
                   variant='standard'
+                  value={initialValue.subject}
+                  onChange={(e) => {
+                    setInitialValue({ ...initialValue, subject: e.target.value });
+                  }}
                   sx={{
                     '& .MuiInputBase-root': {
                       color: 'white',
@@ -161,7 +210,7 @@ const Contacts = ({}: ContactsProps) => {
                     },
                   }}
                   InputLabelProps={{
-                    style: { color: '#fff', fontSize: sm ? 20 : 25 },
+                    style: { color: colors.tomato, fontSize: sm ? 20 : 25 },
                   }}
                 />
               </Grid>
@@ -173,6 +222,10 @@ const Contacts = ({}: ContactsProps) => {
                   variant='standard'
                   multiline
                   rows={4}
+                  value={initialValue.message}
+                  onChange={(e) => {
+                    setInitialValue({ ...initialValue, message: e.target.value });
+                  }}
                   sx={{
                     '& .MuiInputBase-root': {
                       color: 'white',
@@ -189,7 +242,7 @@ const Contacts = ({}: ContactsProps) => {
                     },
                   }}
                   InputLabelProps={{
-                    style: { color: '#fff', fontSize: sm ? 20 : 25 },
+                    style: { color: colors.tomato, fontSize: sm ? 20 : 25 },
                   }}
                 />
               </Grid>

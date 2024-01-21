@@ -17,6 +17,8 @@ import ScrollToTopButton from '../common/scrollToTopButton';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import 'react-multi-carousel/lib/styles.css';
+import { ToastContainer, Zoom } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -49,6 +51,19 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
         <Component {...pageProps} />
         {/* <Footer /> */}
         {/* <ScrollToTopButton /> */}
+        <ToastContainer
+          position='top-right'
+          autoClose={3000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme='colored'
+          transition={Zoom}
+        />
       </ThemeProvider>
     </CacheProvider>
   );

@@ -21,8 +21,6 @@
     "@types/aos": "^3.0.4",
     "aos": "^2.3.4",
     "i": "^0.3.7",
-    "lottie-react-web": "^2.2.2",
-    "lottie-web": "^5.9.2",
     "next": "12.1.5",
     "npm": "^9.8.0",
     "react": "18.0.0",
@@ -32,10 +30,7 @@
     "react-multi-carousel": "^2.8.4",
     "react-reveal": "^1.2.2",
     "react-slide-fade-in": "^1.0.9",
-    "react-tsparticles": "^2.11.0",
-    "tsparticles": "^2.11.0",
-    "tsparticles-engine": "^2.11.0",
-    "typewriter-effect": "^2.19.0"
+    "react-toastify": "^10.0.4"
   },
   "devDependencies": {
     "@types/node": "17.0.23",
