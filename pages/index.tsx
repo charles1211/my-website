@@ -16,6 +16,29 @@ const Home: NextPage = () => {
   const xl = useMediaQuery(theme.breakpoints.down('xl'));
   const sm = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const handleDownload = () => {
+    // Replace 'path/to/your/local/file.pdf' with the actual path to your PDF file
+    const fileUrl = '/CharlesRhobertCabarrusCV.pdf';
+
+    // Create a link element
+    const link = document.createElement('a');
+
+    // Set the href attribute to the file URL
+    link.href = fileUrl;
+
+    // Set the download attribute with the desired filename
+    link.download = 'CharlesRhobertCabarrusCV.pdf';
+
+    // Append the link to the document body
+    document.body.appendChild(link);
+
+    // Trigger a click on the link to start the download
+    link.click();
+
+    // Remove the link from the document body
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       <Grid
@@ -104,6 +127,7 @@ const Home: NextPage = () => {
                     variant='contained'
                     color='primary'
                     sx={{ mt: { lg: 2, xs: 0 }, border: `3px solid ${colors.tomato}` }}
+                    onClick={handleDownload}
                   >
                     <Typography
                       sx={{
