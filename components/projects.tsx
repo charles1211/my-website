@@ -11,6 +11,7 @@ import { colors } from '../styles/theme/colors';
 import { GoArrowUpRight } from 'react-icons/go';
 import Carousel from 'react-multi-carousel';
 import { useState } from 'react';
+import React from 'react';
 
 interface ProjectsProps {}
 
@@ -20,6 +21,39 @@ const Projects = ({}: ProjectsProps) => {
   const sm = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [showMore, setShowMore] = useState(false);
+
+  const data = [
+    {
+      id: 1,
+      name: 'The little lemon restaurant',
+      description: `My capstone project, undertaken as part of the Front-End Developer Meta Course, is centered on front-end development. The project exemplifies a restaurant interface, specifically The Little Lemon Restaurant, showcasing functionalities such as table reservations and menu exploration.`,
+      techStack: ['react', 'css', 'node.js', 'chakra-ui', 'javascript'],
+      gitLink: 'https://github.com/charles1211/metaCapstone-Little-Lemon-Restaurant',
+      projectLink: 'https://meta-capstone-little-lemon-restaurant.vercel.app/',
+      thumbnail: '/images/littleLemonRestaurantThumbnail.png',
+      visibility: 'public',
+    },
+    {
+      id: 2,
+      name: 'Moshify',
+      description: `'The Ultimate HTML5 & CSS3 Series' course led by Mosh Hamedani at CodeWithMosh. This website serves as a demonstration of a Cloud Hosting Platform.`,
+      techStack: ['css', 'html'],
+      gitLink: 'https://github.com/charles1211/chawify',
+      projectLink: 'https://chawify.vercel.app/',
+      thumbnail: '/images/chawify.png',
+      visibility: 'public',
+    },
+    {
+      id: 3,
+      name: 'Game-Hub',
+      description: `This is a responsive website built using React 18 course by Code with Mosh.`,
+      techStack: ['react', 'typescript', 'axios', 'zustand', 'chakra-ui'],
+      gitLink: 'https://github.com/charles1211/game-hub',
+      projectLink: 'https://charles-game-hub.vercel.app/',
+      thumbnail: '/images/gamehub.png',
+      visibility: 'public',
+    },
+  ];
 
   return (
     <Grid item xs={12}>
@@ -97,403 +131,252 @@ const Projects = ({}: ProjectsProps) => {
           slidesToSlide={1}
           swipeable
         >
-          <Grid container item xs={12} spacing={1} data-aos='fade-up'>
-            <Grid item xs={12}>
-              <Box sx={{ backgroundColor: 'white', height: 150, width: '100%' }} />
-            </Grid>
-            <Grid item xs={12}>
-              <Chip
-                label='HTML'
-                sx={{
-                  backgroundColor: '#1F2D36',
-                  color: 'white',
-                  fontSize: 12,
-                  m: 1,
-                  // p: xl ? 2 : 3,
-                  borderRadius: 20,
-                  // mt: 3,
-                }}
-              />
-              <Chip
-                label='Javascript'
-                sx={{
-                  backgroundColor: '#1F2D36',
-                  color: 'white',
-                  fontSize: 12,
-                  m: 1,
-                  // p: xl ? 2 : 3,
-                  borderRadius: 20,
-                  // mt: 3,
-                }}
-              />
-              <Chip
-                label='CSS'
-                sx={{
-                  backgroundColor: '#1F2D36',
-                  color: 'white',
-                  fontSize: 12,
-                  m: 1,
-                  // p: xl ? 2 : 3,
-                  borderRadius: 20,
-                  // mt: 3,
-                }}
-              />
-
-              <Chip
-                label='CSS'
-                sx={{
-                  backgroundColor: '#1F2D36',
-                  color: 'white',
-                  fontSize: 12,
-                  m: 1,
-                  // p: xl ? 2 : 3,
-                  borderRadius: 20,
-                  // mt: 3,
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Typography sx={{ fontSize: { xl: 45, lg: 30, fontWeight: 500 } }}>
-                Project name
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sx={{ mb: 1 }}>
-              <Typography color='lightgray' sx={{ fontFamily: 'Roboto Slab light', fontSize: 15 }}>
-                {showMore
-                  ? ` Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur amet pariatur
-              nulla placeat aliquam perferendis error, maxime provident quidem? Similique officia
-              eaque tenetur aliquid tempora, reiciendis aperiam minima, provident commodi suscipit
-              neque nostrum omnis deleniti inventore debitis sapiente voluptate! Voluptatum illo
-              eveniet autem quos vitae ab ad sapiente qui cum.`
-                  : ` Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur amet pariatur
-              nulla placeat aliquam perferendis error, maxime provident quidem? Similique officia
-              eaque tenetur aliquid tempora, reiciendis aperiam minima, provident commodi suscipit
-              neque nostrum omnis deleniti inventore debitis sapiente voluptate! Voluptatum illo
-              eveniet autem quos vitae ab ad sapiente qui cum.`.substring(0, 100)}{' '}
-                <Button
-                  color='secondary'
-                  // variant='outlined'
-                  onClick={() => setShowMore(!showMore)}
-                  sx={{ fontSize: 12, p: 0.5 }}
-                >
-                  {showMore ? 'Show less' : 'Show more...'}
-                </Button>
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Button variant='contained' sx={{ backgroundColor: colors.tomato }}>
-                <Typography sx={{ fontSize: 15, textTransform: 'none' }}>View Github</Typography>
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button>
+          {data.map((x) => (
+            <Grid container item xs={12} spacing={1} data-aos='fade-up' key={x.id}>
+              <Grid item xs={12}>
+                <Box
+                  component='img'
+                  src={x.thumbnail}
+                  alt='project thumbnail'
+                  sx={{ backgroundColor: 'white', height: 150, width: '100%' }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                {x.techStack.map((item, i) => (
+                  <Chip
+                    key={i}
+                    label={item}
+                    sx={{
+                      backgroundColor: '#1F2D36',
+                      color: 'white',
+                      fontSize: 12,
+                      m: 1,
+                      // p: xl ? 2 : 3,
+                      borderRadius: 20,
+                      // mt: 3,
+                    }}
+                  />
+                ))}
+              </Grid>
+              <Grid item xs={12}>
+                <Typography sx={{ fontSize: { xl: 45, lg: 30, fontWeight: 500 } }}>
+                  {x.name}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sx={{ mb: 1 }}>
                 <Typography
-                  sx={{
-                    fontSize: 15,
-                    textTransform: 'none',
-                    textDecoration: 'underline',
-                    textDecorationColor: colors.tomato,
-                    textUnderlineOffset: 10,
+                  color='lightgray'
+                  sx={{ fontFamily: 'Roboto Slab light', fontSize: 15 }}
+                >
+                  {showMore ? x.description : x.description.substring(0, 100)}{' '}
+                  <Button
+                    color='secondary'
+                    // variant='outlined'
+                    onClick={() => setShowMore(!showMore)}
+                    sx={{ fontSize: 12, p: 0.5 }}
+                  >
+                    {showMore ? 'Show less' : 'Show more...'}
+                  </Button>
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  variant='contained'
+                  sx={{ backgroundColor: colors.tomato }}
+                  onClick={() => {
+                    window.open(x.gitLink);
                   }}
                 >
-                  View project
-                </Typography>
-                <GoArrowUpRight style={{ color: 'white', fontSize: 15 }} />
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid container item xs={12} spacing={1} data-aos='fade-up'>
-            <Grid item xs={12}>
-              <Box sx={{ backgroundColor: 'white', height: 150, width: '100%' }} />
-            </Grid>
-            <Grid item xs={12}>
-              <Chip
-                label='HTML'
-                sx={{
-                  backgroundColor: '#1F2D36',
-                  color: 'white',
-                  fontSize: 12,
-                  m: 1,
-                  // p: xl ? 2 : 3,
-                  borderRadius: 20,
-                  // mt: 3,
-                }}
-              />
-              <Chip
-                label='Javascript'
-                sx={{
-                  backgroundColor: '#1F2D36',
-                  color: 'white',
-                  fontSize: 12,
-                  m: 1,
-                  // p: xl ? 2 : 3,
-                  borderRadius: 20,
-                  // mt: 3,
-                }}
-              />
-              <Chip
-                label='CSS'
-                sx={{
-                  backgroundColor: '#1F2D36',
-                  color: 'white',
-                  fontSize: 12,
-                  m: 1,
-                  // p: xl ? 2 : 3,
-                  borderRadius: 20,
-                  // mt: 3,
-                }}
-              />
-
-              <Chip
-                label='CSS'
-                sx={{
-                  backgroundColor: '#1F2D36',
-                  color: 'white',
-                  fontSize: 12,
-                  m: 1,
-                  // p: xl ? 2 : 3,
-                  borderRadius: 20,
-                  // mt: 3,
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Typography sx={{ fontSize: { xl: 45, lg: 30, fontWeight: 500 } }}>
-                Project name
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sx={{ mb: 1 }}>
-              <Typography color='lightgray' sx={{ fontFamily: 'Roboto Slab light', fontSize: 15 }}>
-                {showMore
-                  ? ` Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur amet pariatur
-              nulla placeat aliquam perferendis error, maxime provident quidem? Similique officia
-              eaque tenetur aliquid tempora, reiciendis aperiam minima, provident commodi suscipit
-              neque nostrum omnis deleniti inventore debitis sapiente voluptate! Voluptatum illo
-              eveniet autem quos vitae ab ad sapiente qui cum.`
-                  : ` Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur amet pariatur
-              nulla placeat aliquam perferendis error, maxime provident quidem? Similique officia
-              eaque tenetur aliquid tempora, reiciendis aperiam minima, provident commodi suscipit
-              neque nostrum omnis deleniti inventore debitis sapiente voluptate! Voluptatum illo
-              eveniet autem quos vitae ab ad sapiente qui cum.`.substring(0, 100)}{' '}
-                <Button
-                  color='secondary'
-                  // variant='outlined'
-                  onClick={() => setShowMore(!showMore)}
-                  sx={{ fontSize: 12, p: 0.5 }}
-                >
-                  {showMore ? 'Show less' : 'Show more...'}
+                  <Typography sx={{ fontSize: 15, textTransform: 'none' }}>View Github</Typography>
                 </Button>
-              </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Button>
+                  <Typography
+                    sx={{
+                      fontSize: 15,
+                      textTransform: 'none',
+                      textDecoration: 'underline',
+                      textDecorationColor: colors.tomato,
+                      textUnderlineOffset: 10,
+                    }}
+                    onClick={() => {
+                      window.open(x.projectLink);
+                    }}
+                  >
+                    View project
+                  </Typography>
+                  <GoArrowUpRight style={{ color: 'white', fontSize: 15 }} />
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <Button variant='contained' sx={{ backgroundColor: colors.tomato }}>
-                <Typography sx={{ fontSize: 15, textTransform: 'none' }}>View Github</Typography>
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button>
-                <Typography
-                  sx={{
-                    fontSize: 15,
-                    textTransform: 'none',
-                    textDecoration: 'underline',
-                    textDecorationColor: colors.tomato,
-                    textUnderlineOffset: 10,
-                  }}
-                >
-                  View project
-                </Typography>
-                <GoArrowUpRight style={{ color: 'white', fontSize: 15 }} />
-              </Button>
-            </Grid>
-          </Grid>
+          ))}
         </Carousel>
       ) : (
         <Grid container item xs={12} spacing={10} sx={{ mt: 10 }}>
-          <Grid item xs={12} lg={6} data-aos='zoom-in'>
-            <Grid item xs={12}>
-              <Typography sx={{ fontSize: { xl: 45, lg: 30 } }}>Project name</Typography>
-            </Grid>
-            <Grid item xs={12} sx={{ mb: 3 }}>
-              <Chip
-                label='HTML'
-                sx={{
-                  backgroundColor: '#1F2D36',
-                  color: 'white',
-                  fontSize: xl ? 15 : 20,
-                  mr: 2,
-                  p: xl ? 2 : 3,
-                  borderRadius: 20,
-                  mt: 3,
-                }}
-              />
-              <Chip
-                label='Javascript'
-                sx={{
-                  backgroundColor: '#1F2D36',
-                  color: 'white',
-                  fontSize: xl ? 15 : 20,
-                  mr: 2,
-                  p: xl ? 2 : 3,
-                  borderRadius: 20,
-                  mt: 3,
-                }}
-              />
-              <Chip
-                label='CSS'
-                sx={{
-                  backgroundColor: '#1F2D36',
-                  color: 'white',
-                  fontSize: xl ? 15 : 20,
-                  mr: 2,
-                  p: xl ? 2 : 3,
-                  borderRadius: 20,
-                  mt: 3,
-                }}
-              />
-              <Chip
-                label='CSS'
-                sx={{
-                  backgroundColor: '#1F2D36',
-                  color: 'white',
-                  fontSize: xl ? 15 : 20,
-                  mr: 2,
-                  p: xl ? 2 : 3,
-                  borderRadius: 20,
-                  mt: 3,
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sx={{ mb: 4 }}>
-              <Typography variant='h6' color='lightgray' sx={{ fontFamily: 'Roboto Slab light' }}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur amet pariatur
-                nulla placeat aliquam perferendis error, maxime provident quidem? Similique officia
-                eaque tenetur aliquid tempora, reiciendis aperiam minima, provident commodi suscipit
-                neque nostrum omnis deleniti inventore debitis sapiente voluptate! Voluptatum illo
-                eveniet autem quos vitae ab ad sapiente qui cum.
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sx={{ display: 'flex' }}>
-              <Button variant='contained' sx={{ backgroundColor: colors.tomato, marginRight: 5 }}>
-                <Typography sx={{ fontSize: { xl: 25, lg: 15 }, p: 1, textTransform: 'none' }}>
-                  View Github
-                </Typography>
-              </Button>
+          {data.map((x) => (
+            <React.Fragment key={x.id}>
+              {x.id % 2 !== 0 ? (
+                <>
+                  <Grid item xs={12} lg={6} data-aos='zoom-in'>
+                    <Grid item xs={12}>
+                      <Typography sx={{ fontSize: { xl: 45, lg: 30 } }}>{x.name}</Typography>
+                    </Grid>
 
-              <Button>
-                <Typography
-                  sx={{
-                    p: 1,
-                    fontSize: { xl: 25, lg: 15 },
-                    textTransform: 'none',
-                    textDecoration: 'underline',
-                    textDecorationColor: colors.tomato,
-                    textUnderlineOffset: 10,
-                  }}
-                >
-                  View project
-                </Typography>
-                <GoArrowUpRight style={{ color: 'white', fontSize: 30 }} />
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid item xs={6} data-aos='flip-up'>
-            <Box sx={{ backgroundColor: 'gray', height: '100%', width: '100%' }} />
-          </Grid>
+                    <Grid item xs={12} sx={{ mb: 3 }}>
+                      {x.techStack.map((item, i) => (
+                        <Chip
+                          key={i}
+                          label={item}
+                          sx={{
+                            backgroundColor: '#1F2D36',
+                            color: 'white',
+                            fontSize: xl ? 10 : 20,
+                            mr: 2,
+                            p: xl ? 2 : 3,
+                            borderRadius: 20,
+                            mt: 3,
+                          }}
+                        />
+                      ))}
+                    </Grid>
+
+                    <Grid item xs={12} sx={{ mb: 4 }}>
+                      <Typography
+                        variant='h6'
+                        color='lightgray'
+                        sx={{ fontFamily: 'Roboto Slab light' }}
+                      >
+                        {x.description}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sx={{ display: 'flex' }}>
+                      <Button
+                        variant='contained'
+                        sx={{ backgroundColor: colors.tomato, marginRight: 5 }}
+                        onClick={() => {
+                          window.open(x.gitLink);
+                        }}
+                      >
+                        <Typography
+                          sx={{ fontSize: { xl: 25, lg: 15 }, p: 1, textTransform: 'none' }}
+                        >
+                          View Github
+                        </Typography>
+                      </Button>
+
+                      <Button
+                        onClick={() => {
+                          window.open(x.projectLink);
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            p: 1,
+                            fontSize: { xl: 25, lg: 15 },
+                            textTransform: 'none',
+                            textDecoration: 'underline',
+                            textDecorationColor: colors.tomato,
+                            textUnderlineOffset: 10,
+                          }}
+                        >
+                          View project
+                        </Typography>
+                        <GoArrowUpRight style={{ color: 'white', fontSize: 30 }} />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={6} data-aos='flip-up'>
+                    <Box
+                      component='img'
+                      src={x.thumbnail}
+                      alt='project thumbnail'
+                      sx={{ height: '100%', width: '100%', borderRadius: 2 }}
+                    />
+                  </Grid>
+                </>
+              ) : (
+                <React.Fragment key={x.id}>
+                  <Grid item xs={6} data-aos='flip-up'>
+                    <Box
+                      component='img'
+                      src={x.thumbnail}
+                      alt='project thumbnail'
+                      sx={{ height: '100%', width: '100%', borderRadius: 2 }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} lg={6} data-aos='zoom-in'>
+                    <Grid item xs={12}>
+                      <Typography sx={{ fontSize: { xl: 45, lg: 30 } }}>{x.name}</Typography>
+                    </Grid>
+                    <Grid item xs={12} sx={{ mb: 3 }}>
+                      {x.techStack.map((item, i) => (
+                        <Chip
+                          key={i}
+                          label={item}
+                          sx={{
+                            backgroundColor: '#1F2D36',
+                            color: 'white',
+                            fontSize: xl ? 10 : 20,
+                            mr: 2,
+                            p: xl ? 2 : 3,
+                            borderRadius: 20,
+                            mt: 3,
+                          }}
+                        />
+                      ))}
+                    </Grid>
+                    <Grid item xs={12} sx={{ mb: 4 }}>
+                      <Typography
+                        variant='h6'
+                        color='lightgray'
+                        sx={{ fontFamily: 'Roboto Slab light' }}
+                      >
+                        {x.description}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sx={{ display: 'flex' }}>
+                      <Button
+                        variant='contained'
+                        sx={{ backgroundColor: colors.tomato, marginRight: 5 }}
+                        onClick={() => {
+                          window.open(x.gitLink);
+                        }}
+                      >
+                        <Typography
+                          sx={{ fontSize: { xl: 25, lg: 15 }, p: 1, textTransform: 'none' }}
+                        >
+                          View Github
+                        </Typography>
+                      </Button>
+
+                      <Button
+                        onClick={() => {
+                          window.open(x.projectLink);
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            p: 1,
+                            fontSize: { xl: 25, lg: 15 },
+                            textTransform: 'none',
+                            textDecoration: 'underline',
+                            textDecorationColor: colors.tomato,
+                            textUnderlineOffset: 10,
+                          }}
+                        >
+                          View project
+                        </Typography>
+                        <GoArrowUpRight style={{ color: 'white', fontSize: 30 }} />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </React.Fragment>
+              )}
+            </React.Fragment>
+          ))}
         </Grid>
       )}
-      {/*   <Grid container item xs={12} spacing={10} sx={{ mt: 10 }}>
-        <Grid item xs={6} data-aos='flip-up'>
-          <Box sx={{ backgroundColor: 'gray', height: '100%', width: '100%' }} />
-        </Grid>
-        <Grid item xs={6} data-aos='zoom-in'>
-          <Grid item xs={12}>
-            <Typography sx={{ fontSize: { xl: 45, lg: 30 } }}>Project name</Typography>
-          </Grid>
-          <Grid item xs={12} sx={{ mb: 3 }}>
-            <Chip
-              label='HTML'
-              sx={{
-                backgroundColor: '#1F2D36',
-                color: 'white',
-                fontSize: xl ? 15 : 20,
-                mr: 2,
-                p: xl ? 2 : 3,
-                borderRadius: 20,
-                mt: 3,
-              }}
-            />
-            <Chip
-              label='Javascript'
-              sx={{
-                backgroundColor: '#1F2D36',
-                color: 'white',
-                fontSize: xl ? 15 : 20,
-                mr: 2,
-                p: xl ? 2 : 3,
-                borderRadius: 20,
-                mt: 3,
-              }}
-            />
-            <Chip
-              label='CSS'
-              sx={{
-                backgroundColor: '#1F2D36',
-                color: 'white',
-                fontSize: xl ? 15 : 20,
-                mr: 2,
-                p: xl ? 2 : 3,
-                borderRadius: 20,
-                mt: 3,
-              }}
-            />
-            <Chip
-              label='CSS'
-              sx={{
-                backgroundColor: '#1F2D36',
-                color: 'white',
-                fontSize: xl ? 15 : 20,
-                mr: 2,
-                p: xl ? 2 : 3,
-                borderRadius: 20,
-                mt: 3,
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} sx={{ mb: 4 }}>
-            <Typography variant='h6' color='lightgray' sx={{ fontFamily: 'Roboto Slab light' }}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur amet pariatur
-              nulla placeat aliquam perferendis error, maxime provident quidem? Similique officia
-              eaque tenetur aliquid tempora, reiciendis aperiam minima, provident commodi suscipit
-              neque nostrum omnis deleniti inventore debitis sapiente voluptate! Voluptatum illo
-              eveniet autem quos vitae ab ad sapiente qui cum.
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sx={{ display: 'flex' }}>
-            <Button variant='contained' sx={{ backgroundColor: colors.tomato, marginRight: 5 }}>
-              <Typography sx={{ fontSize: { xl: 25, lg: 15 }, p: 1, textTransform: 'none' }}>
-                View Github
-              </Typography>
-            </Button>
-
-            <Button>
-              <Typography
-                sx={{
-                  p: 1,
-                  fontSize: { xl: 25, lg: 15 },
-                  textTransform: 'none',
-                  textDecoration: 'underline',
-                  textDecorationColor: colors.tomato,
-                  textUnderlineOffset: 10,
-                }}
-              >
-                View project
-              </Typography>
-              <GoArrowUpRight style={{ color: 'white', fontSize: 30 }} />
-            </Button>
-          </Grid>
-        </Grid>
-      </Grid> */}
     </Grid>
   );
 };
