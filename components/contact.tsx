@@ -248,7 +248,11 @@ const Contacts = ({}: ContactsProps) => {
               </Grid>
               {sm && (
                 <Grid container justifyContent='center' alignItems='center' item xs={12} lg={12}>
-                  <Button variant='contained' sx={{ backgroundColor: colors.tomato }}>
+                  <Button
+                    variant='contained'
+                    sx={{ backgroundColor: colors.tomato }}
+                    onClick={handleSubmit}
+                  >
                     <Typography
                       sx={{
                         fontSize: 15,

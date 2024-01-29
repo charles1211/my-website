@@ -8,6 +8,15 @@ export default class MyDocument extends Document {
     return (
       <Html lang='en'>
         <Head>
+          <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
+          <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+          <meta name='description' content='My personal porfolio' />
+          <meta property='og:title' content='Charles Portfolio' />
+          <meta property='og:description' content='Charles Portfolio' />
+          <meta property='og:type' content='website' />
+          <meta property='og:url' content='https://charlescabarrus.vercel.app/' />
+          <title>Charles Portfolio</title>
+          <link rel='icon' href='/images/crc-logo.png' />
           <link
             rel='stylesheet'
             href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap'
