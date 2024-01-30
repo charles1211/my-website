@@ -121,7 +121,7 @@ const AboutMe = ({}: AboutMeProps) => {
           <Grid item xs={4} lg={4}>
             <Grid item xs={12} lg={12}>
               <Typography align='center' sx={{ fontWeight: 700, fontSize: { lg: 55, xs: 30 } }}>
-                120 <span style={{ color: colors.tomato }}>+</span>
+                10 <span style={{ color: colors.tomato }}>+</span>
               </Typography>
             </Grid>
             <Grid item xs={12} lg={12}>
