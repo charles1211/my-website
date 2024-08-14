@@ -19,6 +19,7 @@ import 'aos/dist/aos.css';
 import 'react-multi-carousel/lib/styles.css';
 import { ToastContainer, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Head from 'next/head';
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -42,30 +43,47 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
   }, []);
 
   return (
-    <CacheProvider value={emotionCache}>
-      <ThemeProvider theme={lightTheme}>
-        <CssBaseline />
-
-        <Header window={window} />
-
-        <Component {...pageProps} />
-        {/* <Footer /> */}
-        {/* <ScrollToTopButton /> */}
-        <ToastContainer
-          position='top-right'
-          autoClose={3000}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme='colored'
-          transition={Zoom}
+    <>
+      <Head>
+        <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
+        <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+        <meta name='description' content='My personal porfolio' />
+        <meta property='og:title' content='Charles Portfolio' />
+        <meta property='og:description' content='Charles Portfolio' />
+        <meta property='og:type' content='website' />
+        <meta property='og:url' content='https://charlescabarrus.vercel.app/' />
+        <title>Charles Portfolio</title>
+        <link rel='icon' href='/images/crc-logo.png' />
+        <link
+          rel='stylesheet'
+          href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap'
         />
-      </ThemeProvider>
-    </CacheProvider>
+      </Head>
+      <CacheProvider value={emotionCache}>
+        <ThemeProvider theme={lightTheme}>
+          <CssBaseline />
+
+          <Header window={window} />
+
+          <Component {...pageProps} />
+          {/* <Footer /> */}
+          {/* <ScrollToTopButton /> */}
+          <ToastContainer
+            position='top-right'
+            autoClose={3000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme='colored'
+            transition={Zoom}
+          />
+        </ThemeProvider>
+      </CacheProvider>
+    </>
   );
 };
 
