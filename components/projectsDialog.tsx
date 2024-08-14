@@ -43,8 +43,8 @@ const ProjectsDialog = ({ isOpen, onClose, data }: ProjectsDialogProps) => {
             </Grid>
             <Grid item xs={12}>
               <Typography>Responsibilities</Typography>
-              {data.responsibilities.map((x) => (
-                <Typography color='gray' variant='subtitle2'>{`• ${x}`}</Typography>
+              {data.responsibilities.map((x, i) => (
+                <Typography color='gray' variant='subtitle2' key={i}>{`• ${x}`}</Typography>
               ))}
             </Grid>
           </Grid>
