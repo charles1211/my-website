@@ -110,11 +110,11 @@ const AboutMe = ({}: AboutMeProps) => {
               textAlign: { lg: 'start', xs: 'center' },
             }}
           >
-            I have been working at a local financing company as a full-stack developer for almost
-            four years. However, I consider front-end development as my primary expertise, as it
-            truly excites me to craft and design various websites. I am delighted to have acquired
-            extensive knowledge in programming, and I am pleased to express my enthusiasm for the
-            continuous learning process in the field of programming.
+            Hi! I'm a passionate and joyful full-stack developer with a love for building intuitive,
+            scalable, and impactful digital experiences. With a strong command of both front-end and
+            back-end development, I bring a dedicated mindset and positive energy to every project I
+            work on. I believe that great software is built not just with code—but with curiosity,
+            collaboration, and care.
           </Typography>
         </Grid>
         <Grid container item xs={12} lg={12}>
