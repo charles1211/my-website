@@ -110,11 +110,11 @@ const AboutMe = ({}: AboutMeProps) => {
               textAlign: { lg: 'start', xs: 'center' },
             }}
           >
-            Hi! I'm a passionate and joyful full-stack developer with a love for building intuitive,
+            {`Hi! I'm a passionate and joyful full-stack developer with a love for building intuitive,
             scalable, and impactful digital experiences. With a strong command of both front-end and
             back-end development, I bring a dedicated mindset and positive energy to every project I
             work on. I believe that great software is built not just with code—but with curiosity,
-            collaboration, and care.
+            collaboration, and care.`}
           </Typography>
         </Grid>
         <Grid container item xs={12} lg={12}>
