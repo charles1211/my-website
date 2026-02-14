@@ -37,8 +37,8 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
   React.useEffect(() => {
     AOS.init({
       easing: 'ease-out-cubic',
-      once: false,
-      offset: 500,
+      once: true,
+      offset: 80,
     });
   }, []);
 

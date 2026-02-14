@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   padding: 0;
@@ -15,10 +19,26 @@ a {
   box-sizing: border-box;
 }
 
-#footer {
-  position: absolute;
-  bottom: 0;
-  width: '100%';
+::selection {
+  background-color: #FF715B;
+  color: #ffffff;
+}
+
+*:focus-visible {
+  outline: 2px solid #FF715B;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .scroll-to-top {
@@ -27,15 +47,13 @@ a {
   right: 1.5rem;
   animation: fadeIn 700ms ease-in-out 1s both;
   cursor: pointer;
+  z-index: 1000;
 }
 
 @media only screen and (max-width: 600px) {
   .scroll-to-top {
-    position: fixed;
     bottom: 5rem;
     right: 1.5rem;
-    animation: fadeIn 700ms ease-in-out 1s both;
-    cursor: pointer;
   }
 }
 
@@ -43,7 +61,7 @@ a {
   font-size: 35px;
   cursor: pointer;
   margin-right: 15px;
-  transition: transform 0.2s;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
 }
 
 .social-media-links:hover {
@@ -93,7 +111,6 @@ a {
   min-width: 28px !important;
   min-height: 28px !important;
   opacity: 1;
-
   cursor: pointer;
   top: 50px;
 }
@@ -104,6 +121,5 @@ a {
   display: block;
   font-family: revicons;
   text-align: center;
-  /* z-index: 2; */
   position: relative;
 }

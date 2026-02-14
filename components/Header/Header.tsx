@@ -1,27 +1,25 @@
-import MenuIcon from '@mui/icons-material/Menu';
 import {
+  AppBar,
+  Box,
+  Button,
+  Container,
   CssBaseline,
-  Divider,
+  Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
   Slide,
+  Toolbar,
+  Typography,
   useScrollTrigger,
 } from '@mui/material';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import IconButton from '@mui/material/IconButton';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import { useRef } from 'react';
 import useScrollDirectionHook from '../../hooks/useScrollDirectionHook';
 import { colors } from '../../styles/theme/colors';
-import Drawer from '@mui/material/Drawer';
 import { BiMenuAltLeft } from 'react-icons/bi';
 
 const drawerWidth = 240;
@@ -80,15 +78,59 @@ const Header = (props: Props) => {
   };
 
   const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', pt: 2 }}>
+      <Typography
+        variant='h6'
+        sx={{
+          py: 2,
+          fontWeight: 700,
+          letterSpacing: '-0.02em',
+          background: `linear-gradient(135deg, ${colors.tomato} 0%, ${colors.orange} 100%)`,
+          backgroundClip: 'text',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        }}
+      >
+        Charles Cabarrus
+      </Typography>
+      <Box
+        sx={{
+          width: '60%',
+          height: '1px',
+          mx: 'auto',
+          mb: 2,
+          background: `linear-gradient(90deg, transparent, ${colors.tomato}, transparent)`,
+        }}
+      />
       <List>
         {sections.map((item, i) => (
-          <ListItem key={i}>
+          <ListItem key={i} disablePadding>
             <ListItemButton
               onClick={handleScrollToSection(item.anchor)}
-              sx={{ textAlign: 'center' }}
+              sx={{
+                textAlign: 'center',
+                py: 2,
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 113, 91, 0.1)',
+                  transform: 'translateX(8px)',
+                  '& .MuiListItemText-primary': {
+                    color: colors.tomato,
+                    fontWeight: 600,
+                  },
+                },
+              }}
             >
-              <ListItemText primary={item.text} />
+              <ListItemText
+                primary={item.text}
+                sx={{
+                  '& .MuiListItemText-primary': {
+                    fontSize: '1.1rem',
+                    letterSpacing: '0.05em',
+                    transition: 'all 0.3s ease-in-out',
+                  },
+                }}
+              />
             </ListItemButton>
           </ListItem>
         ))}
@@ -102,7 +144,16 @@ const Header = (props: Props) => {
     <>
       <CssBaseline />
       <HideOnScroll {...props}>
-        <AppBar component='nav' sx={{ boxShadow: 0, p: { lg: 3, xs: 0 } }}>
+        <AppBar
+          component='nav'
+          sx={{
+            boxShadow: 0,
+            p: { lg: 3, xs: 0 },
+            backdropFilter: 'blur(10px)',
+            backgroundColor: 'rgba(18, 31, 40, 0.95)',
+            borderBottom: '1px solid rgba(255, 113, 91, 0.1)',
+          }}
+        >
           <Container maxWidth='xl'>
             <Toolbar disableGutters>
               <IconButton
@@ -110,13 +161,30 @@ const Header = (props: Props) => {
                 aria-label='open drawer'
                 edge='start'
                 onClick={handleDrawerToggle}
-                sx={{ mr: 2, display: { sm: 'none' } }}
+                sx={{
+                  mr: 2,
+                  display: { sm: 'none' },
+                  transition: 'all 0.3s ease-in-out',
+                  '&:hover': {
+                    transform: 'rotate(90deg)',
+                    color: colors.tomato,
+                  },
+                }}
               >
                 <BiMenuAltLeft style={{ fontSize: 40 }} />
               </IconButton>
               <Typography
                 variant='h4'
-                sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, fontWeight: 700 }}
+                sx={{
+                  flexGrow: 1,
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
+                  fontSize: { xs: '1.2rem', sm: '2.125rem' },
+                  background: `linear-gradient(135deg, ${colors.tomato} 0%, ${colors.orange} 100%)`,
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
               >
                 Charles Cabarrus
               </Typography>
@@ -131,9 +199,31 @@ const Header = (props: Props) => {
                       my: 2,
                       color: 'white',
                       mx: 2,
+                      fontWeight: 500,
+                      letterSpacing: '0.05em',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      '&::after': {
+                        content: '""',
+                        position: 'absolute',
+                        bottom: 0,
+                        left: '50%',
+                        width: 0,
+                        height: '2px',
+                        backgroundColor: page.text === 'Contact' ? 'transparent' : colors.orange,
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        transform: 'translateX(-50%)',
+                      },
                       '&:hover': {
-                        color: page.text === 'Contact' ? 'black' : colors.orange,
-                        backgroundColor: page.text === 'Contact' ? 'white' : 'none',
+                        color: page.text === 'Contact' ? '#121F28' : colors.orange,
+                        backgroundColor: page.text === 'Contact' ? 'white' : 'transparent',
+                        transform: page.text === 'Contact' ? 'translateY(-2px)' : 'none',
+                        boxShadow:
+                          page.text === 'Contact' ? '0 4px 12px rgba(255, 113, 91, 0.3)' : 'none',
+                        '&::after': {
+                          width: page.text === 'Contact' ? 0 : '80%',
+                        },
                       },
                     }}
                     variant={page.text === 'Contact' ? 'contained' : undefined}
@@ -162,6 +252,9 @@ const Header = (props: Props) => {
               boxSizing: 'border-box',
               width: drawerWidth,
               backgroundColor: colors.lightBlue,
+              borderRight: `1px solid rgba(255, 113, 91, 0.2)`,
+              backgroundImage:
+                'linear-gradient(180deg, rgba(255, 113, 91, 0.05) 0%, transparent 100%)',
             },
             color: colors.lightBlue,
           }}

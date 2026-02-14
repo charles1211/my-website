@@ -1,7 +1,6 @@
 import { Fab, Grid } from '@mui/material';
+import { KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
-
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { FadeIn } from 'react-slide-fade-in';
 
 interface ScrollToTopButtonProps {}

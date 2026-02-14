@@ -29,13 +29,77 @@ export interface IData {
 
 interface ProjectsProps {}
 
+const chipSx = (xl: boolean) => ({
+  backgroundColor: colors.surfaceLight,
+  color: 'white',
+  fontSize: xl ? 12 : 16,
+  fontWeight: 500,
+  px: 2,
+  py: xl ? 2.5 : 3,
+  borderRadius: '12px',
+  border: `1px solid ${colors.glow}`,
+  letterSpacing: '0.03em',
+  transition: 'all 0.3s ease-in-out',
+  '&:hover': {
+    backgroundColor: colors.tomato,
+    transform: 'translateY(-2px)',
+    boxShadow: `0 4px 12px ${colors.borderHover}`,
+  },
+});
+
+const viewGithubBtnSx = {
+  backgroundColor: colors.tomato,
+  marginRight: 5,
+  borderRadius: '12px',
+  px: 3,
+  py: 1.5,
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  boxShadow: `0 4px 12px ${colors.glow}`,
+  '&:hover': {
+    backgroundColor: colors.orange,
+    transform: 'translateY(-2px)',
+    boxShadow: `0 8px 20px ${colors.borderHover}`,
+  },
+};
+
+const viewProjectBtnSx = {
+  transition: 'all 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'translateX(4px)',
+  },
+};
+
+const viewProjectTextSx = {
+  p: 1,
+  fontSize: { xl: 25, lg: 15 },
+  textTransform: 'none',
+  textDecoration: 'underline',
+  textDecorationColor: colors.tomato,
+  textUnderlineOffset: 10,
+  textDecorationThickness: '2px',
+  fontWeight: 500,
+};
+
+const thumbnailSx = {
+  height: 400,
+  width: '100%',
+  borderRadius: '16px',
+  objectFit: 'cover',
+  border: `1px solid ${colors.glow}`,
+  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+  '&:hover': {
+    transform: 'scale(1.02)',
+    boxShadow: `0 12px 32px ${colors.glow}`,
+  },
+};
+
 const Projects = ({}: ProjectsProps) => {
   const theme = useTheme();
   const xl = useMediaQuery(theme.breakpoints.down('xl'));
   const sm = useMediaQuery(theme.breakpoints.down('sm'));
   const [openDialog, setOpenDialog] = useState(false);
 
-  const [showMore, setShowMore] = useState(false);
+  const [showMore, setShowMore] = useState<{ [key: number]: boolean }>({});
 
   const [selectedProj, setSelectedProj] = useState<IData>();
 
@@ -118,10 +182,104 @@ const Projects = ({}: ProjectsProps) => {
     },
   ];
 
+  const renderActionButtons = (x: IData) => {
+    if (x.visibility !== 'private') {
+      return (
+        <>
+          <Button
+            variant='contained'
+            sx={viewGithubBtnSx}
+            onClick={() => {
+              window.open(x.gitLink);
+            }}
+          >
+            <Typography
+              sx={{ fontSize: { xl: 25, lg: 15 }, p: 1, textTransform: 'none', fontWeight: 500 }}
+            >
+              View Github
+            </Typography>
+          </Button>
+
+          <Button
+            onClick={() => {
+              window.open(x.projectLink);
+            }}
+            sx={viewProjectBtnSx}
+          >
+            <Typography sx={viewProjectTextSx}>View project</Typography>
+            <GoArrowUpRight style={{ color: 'white', fontSize: 30 }} />
+          </Button>
+        </>
+      );
+    }
+    return (
+      <Button
+        onClick={() => {
+          setOpenDialog(true);
+          setSelectedProj(x);
+        }}
+        sx={viewProjectBtnSx}
+      >
+        <Typography sx={viewProjectTextSx}>More Info</Typography>
+      </Button>
+    );
+  };
+
+  const renderProjectContent = (x: IData) => (
+    <Box
+      sx={{
+        p: 4,
+        borderRadius: '20px',
+        backgroundColor: colors.surface,
+        border: `1px solid ${colors.border}`,
+        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        '&:hover': {
+          transform: 'translateY(-8px)',
+          boxShadow: `0 20px 40px ${colors.border}`,
+          borderColor: colors.borderHover,
+        },
+      }}
+    >
+      <Typography
+        sx={{ fontSize: { xl: 45, lg: 30 }, fontWeight: 600, mb: 2, letterSpacing: '-0.01em' }}
+      >
+        {x.name}
+      </Typography>
+
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mb: 3 }}>
+        {x.techStack.map((item, i) => (
+          <Chip key={i} label={item} sx={chipSx(xl)} />
+        ))}
+      </Box>
+
+      <Typography
+        variant='h6'
+        sx={{
+          fontFamily: 'Roboto Slab light',
+          mb: 4,
+          lineHeight: 1.7,
+          color: colors.textSecondary,
+          fontSize: { lg: '1.1rem', xl: '1.2rem' },
+          flexGrow: 1,
+        }}
+      >
+        {x.description}
+      </Typography>
+
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>{renderActionButtons(x)}</Box>
+    </Box>
+  );
+
   return (
     <Grid item xs={12}>
       <Grid item xs={12} data-aos='fade-up'>
-        <Typography align='center' sx={{ fontSize: { lg: 80, xs: 45 }, fontWeight: 500 }}>
+        <Typography
+          align='center'
+          sx={{ fontSize: { lg: 80, xs: 45 }, fontWeight: 600, letterSpacing: '-0.02em', mb: 2 }}
+        >
           Projects
         </Typography>
       </Grid>
@@ -195,117 +353,143 @@ const Projects = ({}: ProjectsProps) => {
           swipeable
         >
           {data.map((x) => (
-            <Grid container item xs={12} spacing={1} data-aos='fade-up' key={x.id}>
-              <Grid item xs={12}>
-                <Box
-                  component='img'
-                  src={x.thumbnail}
-                  alt='project thumbnail'
-                  sx={{ backgroundColor: 'white', height: 150, width: '100%' }}
-                />
-              </Grid>
-              <Grid item xs={12}>
+            <Box
+              key={x.id}
+              data-aos='fade-up'
+              sx={{
+                p: 2.5,
+                mx: 1,
+                borderRadius: '16px',
+                backgroundColor: colors.surface,
+                border: `1px solid ${colors.border}`,
+              }}
+            >
+              <Box
+                component='img'
+                src={x.thumbnail}
+                alt='project thumbnail'
+                sx={{
+                  backgroundColor: 'white',
+                  height: 150,
+                  width: '100%',
+                  borderRadius: '12px',
+                  objectFit: 'cover',
+                  border: `1px solid ${colors.glow}`,
+                }}
+              />
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, my: 2 }}>
                 {x.techStack.map((item, i) => (
                   <Chip
                     key={i}
                     label={item}
                     sx={{
-                      backgroundColor: '#1F2D36',
+                      backgroundColor: colors.surfaceLight,
                       color: 'white',
-                      fontSize: 12,
-                      m: 1,
-                      // p: xl ? 2 : 3,
-                      borderRadius: 20,
-                      // mt: 3,
+                      fontSize: 11,
+                      fontWeight: 500,
+                      px: 1.5,
+                      py: 0.5,
+                      borderRadius: '8px',
+                      border: `1px solid ${colors.glow}`,
                     }}
                   />
                 ))}
-              </Grid>
-              <Grid item xs={12}>
-                <Typography sx={{ fontSize: { xl: 45, lg: 30, fontWeight: 500 } }}>
-                  {x.name}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sx={{ mb: 1 }}>
-                <Typography
-                  color='lightgray'
-                  sx={{ fontFamily: 'Roboto Slab light', fontSize: 15 }}
+              </Box>
+              <Typography sx={{ fontSize: 24, fontWeight: 600, mb: 1 }}>{x.name}</Typography>
+              <Typography
+                sx={{ fontFamily: 'Roboto Slab light', fontSize: 15, lineHeight: 1.6, color: colors.textSecondary, mb: 2 }}
+              >
+                {showMore[x.id] ? x.description : x.description.substring(0, 100)}{' '}
+                <Button
+                  color='secondary'
+                  onClick={() => setShowMore({ ...showMore, [x.id]: !showMore[x.id] })}
+                  sx={{
+                    fontSize: 12,
+                    p: 0.5,
+                    textTransform: 'none',
+                    textDecoration: 'underline',
+                    textUnderlineOffset: 4,
+                  }}
                 >
-                  {showMore ? x.description : x.description.substring(0, 100)}{' '}
-                  <Button
-                    color='secondary'
-                    // variant='outlined'
-                    onClick={() => setShowMore(!showMore)}
-                    sx={{ fontSize: 12, p: 0.5 }}
-                  >
-                    {showMore ? 'Show less' : 'Show more...'}
-                  </Button>
-                </Typography>
-              </Grid>
+                  {showMore[x.id] ? 'Show less' : 'Show more...'}
+                </Button>
+              </Typography>
 
-              {x.visibility !== 'private' ? (
-                <>
-                  <Grid item xs={6}>
-                    <Button
-                      variant='contained'
-                      sx={{ backgroundColor: colors.tomato, marginRight: 5 }}
-                      onClick={() => {
-                        window.open(x.gitLink);
-                      }}
-                    >
-                      <Typography
-                        sx={{ fontSize: { xl: 25, lg: 15 }, p: 1, textTransform: 'none' }}
+              <Grid container spacing={1}>
+                {x.visibility !== 'private' ? (
+                  <>
+                    <Grid item xs={6}>
+                      <Button
+                        variant='contained'
+                        fullWidth
+                        sx={{
+                          backgroundColor: colors.tomato,
+                          borderRadius: '10px',
+                          transition: 'all 0.3s ease-in-out',
+                          '&:hover': {
+                            backgroundColor: colors.orange,
+                            transform: 'translateY(-2px)',
+                          },
+                        }}
+                        onClick={() => {
+                          window.open(x.gitLink);
+                        }}
                       >
-                        View Github
-                      </Typography>
-                    </Button>
-                  </Grid>
+                        <Typography sx={{ fontSize: 13, p: 0.5, textTransform: 'none', fontWeight: 500 }}>
+                          View Github
+                        </Typography>
+                      </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Button
+                        fullWidth
+                        onClick={() => {
+                          window.open(x.projectLink);
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            p: 0.5,
+                            fontSize: 13,
+                            textTransform: 'none',
+                            textDecoration: 'underline',
+                            textDecorationColor: colors.tomato,
+                            textUnderlineOffset: 6,
+                            fontWeight: 500,
+                          }}
+                        >
+                          View project
+                        </Typography>
+                        <GoArrowUpRight style={{ color: 'white', fontSize: 20 }} />
+                      </Button>
+                    </Grid>
+                  </>
+                ) : (
                   <Grid item xs={6}>
                     <Button
                       onClick={() => {
-                        window.open(x.projectLink);
+                        setOpenDialog(true);
+                        setSelectedProj(x);
                       }}
                     >
                       <Typography
                         sx={{
-                          p: 1,
-                          fontSize: { xl: 25, lg: 15 },
+                          p: 0.5,
+                          fontSize: 13,
                           textTransform: 'none',
                           textDecoration: 'underline',
                           textDecorationColor: colors.tomato,
-                          textUnderlineOffset: 10,
+                          textUnderlineOffset: 6,
+                          fontWeight: 500,
                         }}
                       >
-                        View project
+                        More Info
                       </Typography>
-                      <GoArrowUpRight style={{ color: 'white', fontSize: 30 }} />
                     </Button>
                   </Grid>
-                </>
-              ) : (
-                <Grid item xs={6}>
-                  <Button
-                    onClick={() => {
-                      setOpenDialog(true);
-                      setSelectedProj(x);
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        p: 1,
-                        fontSize: { xl: 25, lg: 15 },
-                        textTransform: 'none',
-                        textDecoration: 'underline',
-                        textDecorationColor: colors.tomato,
-                        textUnderlineOffset: 10,
-                      }}
-                    >
-                      More Info
-                    </Typography>
-                  </Button>
-                </Grid>
-              )}
-            </Grid>
+                )}
+              </Grid>
+            </Box>
           ))}
         </Carousel>
       ) : (
@@ -315,205 +499,19 @@ const Projects = ({}: ProjectsProps) => {
               {x.id % 2 !== 0 ? (
                 <>
                   <Grid item xs={12} lg={6} data-aos='zoom-in'>
-                    <Grid item xs={12}>
-                      <Typography sx={{ fontSize: { xl: 45, lg: 30 } }}>{x.name}</Typography>
-                    </Grid>
-
-                    <Grid item xs={12} sx={{ mb: 3 }}>
-                      {x.techStack.map((item, i) => (
-                        <Chip
-                          key={i}
-                          label={item}
-                          sx={{
-                            backgroundColor: '#1F2D36',
-                            color: 'white',
-                            fontSize: xl ? 10 : 20,
-                            mr: 2,
-                            p: xl ? 2 : 3,
-                            borderRadius: 20,
-                            mt: 3,
-                          }}
-                        />
-                      ))}
-                    </Grid>
-
-                    <Grid item xs={12} sx={{ mb: 4 }}>
-                      <Typography
-                        variant='h6'
-                        color='lightgray'
-                        sx={{ fontFamily: 'Roboto Slab light' }}
-                      >
-                        {x.description}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} sx={{ display: 'flex' }}>
-                      {x.visibility !== 'private' ? (
-                        <>
-                          <Button
-                            variant='contained'
-                            sx={{ backgroundColor: colors.tomato, marginRight: 5 }}
-                            onClick={() => {
-                              window.open(x.gitLink);
-                            }}
-                          >
-                            <Typography
-                              sx={{ fontSize: { xl: 25, lg: 15 }, p: 1, textTransform: 'none' }}
-                            >
-                              View Github
-                            </Typography>
-                          </Button>
-
-                          <Button
-                            onClick={() => {
-                              window.open(x.projectLink);
-                            }}
-                          >
-                            <Typography
-                              sx={{
-                                p: 1,
-                                fontSize: { xl: 25, lg: 15 },
-                                textTransform: 'none',
-                                textDecoration: 'underline',
-                                textDecorationColor: colors.tomato,
-                                textUnderlineOffset: 10,
-                              }}
-                            >
-                              View project
-                            </Typography>
-                            <GoArrowUpRight style={{ color: 'white', fontSize: 30 }} />
-                          </Button>
-                        </>
-                      ) : (
-                        <Button
-                          onClick={() => {
-                            setOpenDialog(true);
-                            setSelectedProj(x);
-                          }}
-                        >
-                          <Typography
-                            sx={{
-                              p: 1,
-                              fontSize: { xl: 25, lg: 15 },
-                              textTransform: 'none',
-                              textDecoration: 'underline',
-                              textDecorationColor: colors.tomato,
-                              textUnderlineOffset: 10,
-                            }}
-                          >
-                            More Info
-                          </Typography>
-                        </Button>
-                      )}
-                    </Grid>
+                    {renderProjectContent(x)}
                   </Grid>
                   <Grid item xs={6} data-aos='flip-up'>
-                    <Box
-                      component='img'
-                      src={x.thumbnail}
-                      alt='project thumbnail'
-                      sx={{ height: 400, width: '100%', borderRadius: 2 }}
-                    />
+                    <Box component='img' src={x.thumbnail} alt='project thumbnail' sx={thumbnailSx} />
                   </Grid>
                 </>
               ) : (
                 <React.Fragment key={x.id}>
                   <Grid item xs={6} data-aos='flip-up'>
-                    <Box
-                      component='img'
-                      src={x.thumbnail}
-                      alt='project thumbnail'
-                      sx={{ height: 400, width: '100%', borderRadius: 2 }}
-                    />
+                    <Box component='img' src={x.thumbnail} alt='project thumbnail' sx={thumbnailSx} />
                   </Grid>
                   <Grid item xs={12} lg={6} data-aos='zoom-in'>
-                    <Grid item xs={12}>
-                      <Typography sx={{ fontSize: { xl: 45, lg: 30 } }}>{x.name}</Typography>
-                    </Grid>
-                    <Grid item xs={12} sx={{ mb: 3 }}>
-                      {x.techStack.map((item, i) => (
-                        <Chip
-                          key={i}
-                          label={item}
-                          sx={{
-                            backgroundColor: '#1F2D36',
-                            color: 'white',
-                            fontSize: xl ? 10 : 20,
-                            mr: 2,
-                            p: xl ? 2 : 3,
-                            borderRadius: 20,
-                            mt: 3,
-                          }}
-                        />
-                      ))}
-                    </Grid>
-                    <Grid item xs={12} sx={{ mb: 4 }}>
-                      <Typography
-                        variant='h6'
-                        color='lightgray'
-                        sx={{ fontFamily: 'Roboto Slab light' }}
-                      >
-                        {x.description}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} sx={{ display: 'flex' }}>
-                      {x.visibility !== 'private' ? (
-                        <>
-                          <Button
-                            variant='contained'
-                            sx={{ backgroundColor: colors.tomato, marginRight: 5 }}
-                            onClick={() => {
-                              window.open(x.gitLink);
-                            }}
-                          >
-                            <Typography
-                              sx={{ fontSize: { xl: 25, lg: 15 }, p: 1, textTransform: 'none' }}
-                            >
-                              View Github
-                            </Typography>
-                          </Button>
-
-                          <Button
-                            onClick={() => {
-                              window.open(x.projectLink);
-                            }}
-                          >
-                            <Typography
-                              sx={{
-                                p: 1,
-                                fontSize: { xl: 25, lg: 15 },
-                                textTransform: 'none',
-                                textDecoration: 'underline',
-                                textDecorationColor: colors.tomato,
-                                textUnderlineOffset: 10,
-                              }}
-                            >
-                              View project
-                            </Typography>
-                            <GoArrowUpRight style={{ color: 'white', fontSize: 30 }} />
-                          </Button>
-                        </>
-                      ) : (
-                        <Button
-                          onClick={() => {
-                            setOpenDialog(true);
-                            setSelectedProj(x);
-                          }}
-                        >
-                          <Typography
-                            sx={{
-                              p: 1,
-                              fontSize: { xl: 25, lg: 15 },
-                              textTransform: 'none',
-                              textDecoration: 'underline',
-                              textDecorationColor: colors.tomato,
-                              textUnderlineOffset: 10,
-                            }}
-                          >
-                            More Info
-                          </Typography>
-                        </Button>
-                      )}
-                    </Grid>
+                    {renderProjectContent(x)}
                   </Grid>
                 </React.Fragment>
               )}
