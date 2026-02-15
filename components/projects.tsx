@@ -186,7 +186,7 @@ const Projects = ({}: ProjectsProps) => {
     if (x.visibility !== 'private') {
       return (
         <>
-          <Button
+          {/* <Button
             variant='contained'
             sx={viewGithubBtnSx}
             onClick={() => {
@@ -198,7 +198,7 @@ const Projects = ({}: ProjectsProps) => {
             >
               View Github
             </Typography>
-          </Button>
+          </Button> */}
 
           <Button
             onClick={() => {
@@ -418,7 +418,7 @@ const Projects = ({}: ProjectsProps) => {
               <Grid container spacing={1}>
                 {x.visibility !== 'private' ? (
                   <>
-                    <Grid item xs={6}>
+                    {/* <Grid item xs={6}>
                       <Button
                         variant='contained'
                         fullWidth
@@ -439,7 +439,7 @@ const Projects = ({}: ProjectsProps) => {
                           View Github
                         </Typography>
                       </Button>
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={6}>
                       <Button
                         fullWidth
