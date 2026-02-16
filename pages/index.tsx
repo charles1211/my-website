@@ -140,7 +140,7 @@ const Home: NextPage = () => {
                     textShadow: '0 4px 20px rgba(252, 163, 17, 0.15)',
                   }}
                 >
-                  Front-end Developer
+                  Full-Stack Developer
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={12}>
@@ -200,7 +200,7 @@ const Home: NextPage = () => {
                 }}
                 component='img'
                 src={'./images/charles.jpg'}
-                alt='Charles Cabarrus - Front-end Developer'
+                alt='Charles Cabarrus - Full-Stack Developer'
               />
             </Grid>
             {sm && (

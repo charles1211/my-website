@@ -27,7 +27,7 @@ export interface IData {
   responsibilities: string[];
 }
 
-interface ProjectsProps {}
+interface ProjectsProps { }
 
 const chipSx = (xl: boolean) => ({
   backgroundColor: colors.surfaceLight,
@@ -93,7 +93,7 @@ const thumbnailSx = {
   },
 };
 
-const Projects = ({}: ProjectsProps) => {
+const Projects = ({ }: ProjectsProps) => {
   const theme = useTheme();
   const xl = useMediaQuery(theme.breakpoints.down('xl'));
   const sm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -108,6 +108,30 @@ const Projects = ({}: ProjectsProps) => {
   }
 
   const data = [
+    {
+      id: 7,
+      name: 'InkSmith Studios',
+      description: `The website was crafted to reflect the studio’s complete client journey from consultation and design to booking, artwork creation, and aftercare support. Each stage is thoughtfully represented to communicate professionalism, precision, and care. Built with Next.js 13 and TypeScript, the site focuses on clean architecture, scalability, performance, and SEO. Deployed via Vercel, it delivers a fast, responsive, and immersive digital experience.`,
+      techStack: ['react', 'next.js', 'node.js', 'lucide-react', 'typescript', 'tailwindcss', 'supabase'],
+      gitLink: 'https://github.com/charles1211/InkSmith.git',
+      projectLink: 'https://ink-smith.vercel.app/',
+      thumbnail: '/images/inksmith.png',
+      visibility: 'public',
+      type: '',
+      responsibilities: [],
+    },
+    {
+      id: 6,
+      name: 'Enterprise SEO Blog Engine Demo',
+      description: `A modern SEO-focused blog platform built with React and TypeScript, powered by Vite for lightning-fast development and performance. The project is designed as a scalable content engine, optimised for search visibility, structured content delivery, and clean component architecture. It demonstrates efficient front-end engineering with reusable UI components, strong typing, and a performance-first build setup suitable for enterprise-level publishing.`,
+      techStack: ['react', 'vite', 'node.js', 'lucide-react', 'typescript'],
+      gitLink: 'https://github.com/charles1211/enterprise-seo-blog-engine.git',
+      projectLink: 'https://seo-blog-demo.vercel.app/',
+      thumbnail: '/images/seodemoblog.png',
+      visibility: 'public',
+      type: '',
+      responsibilities: [],
+    },
     {
       id: 1,
       name: 'The little lemon restaurant',
