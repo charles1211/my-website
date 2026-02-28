@@ -1,7 +1,8 @@
-import { Box, Button, Chip, Divider, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, Divider, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { BsDownload } from 'react-icons/bs';
+import { SiTypescript, SiJavascript, SiNodedotjs, SiReact, SiNextdotjs, SiCss3, SiHtml5 } from 'react-icons/si';
 import AboutMe from '../components/aboutMe';
 import Projects from '../components/projects';
 import { colors } from '../styles/theme/colors';
@@ -9,7 +10,15 @@ import Footer from '../components/footer';
 import Contacts from '../components/contact';
 import ScrollToTopButton from '../common/scrollToTopButton';
 
-const skills = ['TypeScript', 'JavaScript', 'Node.js', 'React', 'Next.js', 'CSS', 'HTML'];
+const skills = [
+  { label: 'TypeScript', Icon: SiTypescript, color: '#3178C6' },
+  { label: 'JavaScript', Icon: SiJavascript, color: '#F7DF1E' },
+  { label: 'Node.js',    Icon: SiNodedotjs,  color: '#339933' },
+  { label: 'React',      Icon: SiReact,      color: '#61DAFB' },
+  { label: 'Next.js',    Icon: SiNextdotjs,  color: '#ffffff' },
+  { label: 'CSS',        Icon: SiCss3,       color: '#1572B6' },
+  { label: 'HTML',       Icon: SiHtml5,      color: '#E34F26' },
+];
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -223,47 +232,80 @@ const Home: NextPage = () => {
       {/* Skills Bar */}
       <Box
         sx={{
-          backgroundColor: colors.lightBlue,
-          py: { lg: 5, xs: 3 },
-          px: { lg: 4, xs: 2 },
+          position: 'relative',
+          py: { lg: 4, xs: 3 },
+          overflow: 'hidden',
+          background: 'rgba(22, 35, 44, 0.65)',
+          backdropFilter: 'blur(12px)',
           borderTop: `1px solid ${colors.border}`,
           borderBottom: `1px solid ${colors.border}`,
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0, left: 0, bottom: 0,
+            width: { lg: 140, xs: 60 },
+            background: `linear-gradient(to right, ${colors.lightBlue} 0%, transparent 100%)`,
+            zIndex: 2,
+            pointerEvents: 'none',
+          },
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            top: 0, right: 0, bottom: 0,
+            width: { lg: 140, xs: 60 },
+            background: `linear-gradient(to left, ${colors.lightBlue} 0%, transparent 100%)`,
+            zIndex: 2,
+            pointerEvents: 'none',
+          },
         }}
       >
         <Box
           sx={{
             display: 'flex',
-            flexWrap: 'wrap',
-            gap: { lg: 3, xs: 1.5 },
-            justifyContent: 'center',
             alignItems: 'center',
-            maxWidth: 1200,
-            mx: 'auto',
+            width: 'max-content',
+            animation: 'scrollLeft 28s linear infinite',
+            '&:hover': { animationPlayState: 'paused' },
           }}
         >
-          {skills.map((skill) => (
-            <Chip
-              key={skill}
-              label={skill}
+          {[...skills, ...skills].map(({ label, Icon, color }, i) => (
+            <Box
+              key={i}
               sx={{
-                backgroundColor: 'rgba(255, 113, 91, 0.08)',
-                color: colors.textSecondary,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1.5,
+                mx: { lg: 2, xs: 1.5 },
+                px: { lg: 3, xs: 2 },
+                py: { lg: 1.5, xs: 1 },
+                borderRadius: '50px',
                 border: `1px solid ${colors.border}`,
-                fontSize: { lg: 18, xs: 14 },
-                fontWeight: 500,
-                px: { lg: 3, xs: 1.5 },
-                py: { lg: 3, xs: 2.5 },
-                letterSpacing: '0.03em',
+                background: 'rgba(255, 113, 91, 0.04)',
+                whiteSpace: 'nowrap',
+                cursor: 'default',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 '&:hover': {
-                  backgroundColor: 'rgba(255, 113, 91, 0.15)',
+                  background: 'rgba(255, 113, 91, 0.12)',
                   borderColor: colors.borderHover,
-                  color: colors.textPrimary,
-                  transform: 'translateY(-2px)',
-                  boxShadow: `0 4px 12px ${colors.glow}`,
+                  transform: 'translateY(-3px)',
+                  boxShadow: `0 8px 24px ${colors.glow}`,
                 },
               }}
-            />
+            >
+              <Icon style={{ fontSize: 20, color, flexShrink: 0 }} />
+              <Typography
+                sx={{
+                  color: colors.textSecondary,
+                  fontSize: { lg: 16, xs: 13 },
+                  fontWeight: 500,
+                  letterSpacing: '0.04em',
+                  transition: 'color 0.3s ease',
+                  '.MuiBox-root:hover &': { color: colors.textPrimary },
+                }}
+              >
+                {label}
+              </Typography>
+            </Box>
           ))}
         </Box>
       </Box>
