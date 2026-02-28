@@ -2,6 +2,9 @@ import * as React from 'react';
 import type { AppProps } from 'next/app';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import { ThemeProvider, CssBaseline, createTheme, useScrollTrigger, Slide } from '@mui/material';
+import dynamic from 'next/dynamic';
+
+const ColorBends = dynamic(() => import('../components/ColorBends'), { ssr: false });
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -59,6 +62,21 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
           href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap'
         />
       </Head>
+      <div style={{ position: 'fixed', inset: 0, zIndex: -1 }}>
+        <ColorBends
+          colors={["#ff5c7a", "#8a5cff", "#00ffd1"]}
+          rotation={0}
+          speed={0.5}
+          scale={1}
+          frequency={1.2}
+          warpStrength={1}
+          mouseInfluence={1}
+          parallax={1.25}
+          noise={0.1}
+          transparent
+          autoRotate={0}
+        />
+      </div>
       <CacheProvider value={emotionCache}>
         <ThemeProvider theme={lightTheme}>
           <CssBaseline />
