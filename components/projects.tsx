@@ -109,6 +109,18 @@ const Projects = ({ }: ProjectsProps) => {
 
   const data = [
     {
+      id: 8,
+      name: 'The Feast',
+      description: `The Feast — a global Catholic prayer gathering community of the Light of Jesus family, offering worship services, inspirational talks, locations, and faith resources.`,
+      techStack: ['react', 'next.js', 'node.js', 'shadcn/ui', 'typescript', 'tailwindcss'],
+      gitLink: 'https://github.com/charles1211/feast-website.git',
+      projectLink: 'https://feast-website.vercel.app/',
+      thumbnail: '/images/feastthumbnail.png',
+      visibility: 'public',
+      type: '',
+      responsibilities: [],
+    },
+    {
       id: 7,
       name: 'InkSmith Studios',
       description: `The website was crafted to reflect the studio’s complete client journey from consultation and design to booking, artwork creation, and aftercare support. Each stage is thoughtfully represented to communicate professionalism, precision, and care. Built with Next.js 13 and TypeScript, the site focuses on clean architecture, scalability, performance, and SEO. Deployed via Vercel, it delivers a fast, responsive, and immersive digital experience.`,
