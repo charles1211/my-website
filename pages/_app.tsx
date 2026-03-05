@@ -62,7 +62,7 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
           href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap'
         />
       </Head>
-      <div style={{ position: 'fixed', inset: 0, zIndex: -1 }}>
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}>
         <ColorBends
           colors={["#ff5c7a", "#8a5cff", "#00ffd1"]}
           rotation={0}

@@ -171,30 +171,19 @@ export default function ColorBends({
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-
     const renderer = new THREE.WebGLRenderer({
       antialias: false,
-      powerPreference: isTouchDevice ? 'default' : 'high-performance',
+      powerPreference: 'high-performance',
       alpha: true
     });
     rendererRef.current = renderer;
     (renderer as any).outputColorSpace = (THREE as any).SRGBColorSpace;
-    renderer.setPixelRatio(isTouchDevice ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setClearColor(0x000000, transparent ? 0 : 1);
     renderer.domElement.style.width = '100%';
     renderer.domElement.style.height = '100%';
     renderer.domElement.style.display = 'block';
     container.appendChild(renderer.domElement);
-
-    const handleContextLost = (e: Event) => {
-      e.preventDefault();
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
-    };
-    renderer.domElement.addEventListener('webglcontextlost', handleContextLost);
 
     const clock = new THREE.Clock();
 
@@ -240,7 +229,6 @@ export default function ColorBends({
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
       if (resizeObserverRef.current) resizeObserverRef.current.disconnect();
       else (window as Window).removeEventListener('resize', handleResize);
-      renderer.domElement.removeEventListener('webglcontextlost', handleContextLost);
       geometry.dispose();
       material.dispose();
       renderer.dispose();
@@ -311,12 +299,10 @@ export default function ColorBends({
     };
 
     container.addEventListener('pointermove', handlePointerMove);
-    container.addEventListener('pointerdown', handlePointerMove);
     return () => {
       container.removeEventListener('pointermove', handlePointerMove);
-      container.removeEventListener('pointerdown', handlePointerMove);
     };
   }, []);
 
-  return <div ref={containerRef} className={`w-full h-full relative overflow-hidden ${className ?? ''}`} style={style} />;
+  return <div ref={containerRef} className={`${className ?? ''}`} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', overflow: 'hidden', ...style }} />;
 }

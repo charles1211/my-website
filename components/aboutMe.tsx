@@ -251,7 +251,7 @@ const AboutMe = ({ }: AboutMeProps) => {
             collaboration, and care.`}
           </Typography>
         </Grid>
-        <Grid container item xs={12} lg={12} spacing={{ xs: 2, lg: 2 }}>
+        <Grid container item xs={12} lg={12} spacing={2}>
           {[
             { value: '10', symbol: '+', label: 'Completed Projects' },
             { value: '95', symbol: '%', label: 'Client Satisfaction' },

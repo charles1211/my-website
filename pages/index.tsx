@@ -1,7 +1,8 @@
 import { Box, Button, Divider, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 import type { NextPage } from 'next';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { BsDownload } from 'react-icons/bs';
+import { BsDownload, BsCheck2 } from 'react-icons/bs';
 import { SiTypescript, SiJavascript, SiNodedotjs, SiReact, SiNextdotjs, SiCss3, SiHtml5 } from 'react-icons/si';
 import AboutMe from '../components/aboutMe';
 import Projects from '../components/projects';
@@ -9,6 +10,8 @@ import { colors } from '../styles/theme/colors';
 import Footer from '../components/footer';
 import Contacts from '../components/contact';
 import ScrollToTopButton from '../common/scrollToTopButton';
+
+const roles = ['Full-Stack Developer', 'Frontend Developer', 'Backend Developer', 'Problem Solver'];
 
 const skills = [
   { label: 'TypeScript', Icon: SiTypescript, color: '#3178C6' },
@@ -27,7 +30,40 @@ const Home: NextPage = () => {
   const xl = useMediaQuery(theme.breakpoints.down('xl'));
   const sm = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const [displayText, setDisplayText] = useState('');
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showCursor, setShowCursor] = useState(true);
+  const [dlState, setDlState] = useState<'idle' | 'loading' | 'done'>('idle');
+
+  useEffect(() => {
+    const t = setInterval(() => setShowCursor((p) => !p), 530);
+    return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
+    const role = roles[roleIndex];
+    if (!isDeleting && displayText === role) {
+      const t = setTimeout(() => setIsDeleting(true), 1800);
+      return () => clearTimeout(t);
+    }
+    if (isDeleting && displayText === '') {
+      setIsDeleting(false);
+      setRoleIndex((i) => (i + 1) % roles.length);
+      return;
+    }
+    const speed = isDeleting ? 45 : 90;
+    const t = setTimeout(() => {
+      setDisplayText(
+        isDeleting ? role.slice(0, displayText.length - 1) : role.slice(0, displayText.length + 1)
+      );
+    }, speed);
+    return () => clearTimeout(t);
+  }, [displayText, isDeleting, roleIndex]);
+
   const handleDownload = () => {
+    if (dlState !== 'idle') return;
+    setDlState('loading');
     const fileUrl = '/CharlesRhobertCabarrusCV.pdf';
     const link = document.createElement('a');
     link.href = fileUrl;
@@ -35,7 +71,16 @@ const Home: NextPage = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    setTimeout(() => {
+      setDlState('done');
+      setTimeout(() => setDlState('idle'), 1800);
+    }, 800);
   };
+
+  const isDone = dlState === 'done';
+  const isLoading = dlState === 'loading';
+  const btnColor = isDone ? '#4caf50' : colors.tomato;
+  const btnColorHover = isDone ? '#66bb6a' : colors.orange;
 
   const resumeButton = (
     <Button
@@ -43,32 +88,88 @@ const Home: NextPage = () => {
       variant='contained'
       color='primary'
       onClick={handleDownload}
+      disabled={isLoading}
       sx={{
         mt: { lg: 2, xs: 0 },
-        border: `2px solid ${colors.tomato}`,
+        position: 'relative',
+        overflow: 'hidden',
+        border: `2px solid ${btnColor}`,
         borderRadius: '14px',
         px: { lg: 4, xs: 3 },
         py: { lg: 1.5, xs: 1 },
+        background: isDone ? 'rgba(76,175,80,0.1)' : 'rgba(255,113,91,0.08)',
+        backdropFilter: 'blur(10px)',
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        '@keyframes shimmer': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(200%)' },
+        },
+        '@keyframes borderGlow': {
+          '0%,100%': { boxShadow: `0 4px 15px ${colors.glow}` },
+          '50%': { boxShadow: `0 4px 32px rgba(255,113,91,0.55), 0 0 0 3px ${colors.glow}` },
+        },
+        '@keyframes bounce': {
+          '0%,100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(5px)' },
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '50%',
+          height: '100%',
+          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent)',
+          transform: 'translateX(-100%)',
+          transition: 'none',
+          pointerEvents: 'none',
+        },
+        '&:hover::after': {
+          animation: 'shimmer 0.55s ease forwards',
+        },
+        animation: dlState === 'idle' ? 'borderGlow 3s ease-in-out infinite' : 'none',
         '&:hover': {
-          borderColor: colors.orange,
-          transform: 'translateY(-4px)',
-          boxShadow: `0 12px 28px ${colors.glow}`,
+          borderColor: btnColorHover,
+          background: isDone ? 'rgba(76,175,80,0.18)' : 'rgba(255,113,91,0.18)',
+          transform: 'translateY(-5px)',
+          boxShadow: `0 16px 32px ${colors.glow}`,
+          animation: 'none',
+        },
+        '&:active': { transform: 'translateY(-2px)' },
+        '&.Mui-disabled': {
+          border: `2px solid ${colors.tomato}`,
+          opacity: 0.8,
         },
       }}
     >
-      <Typography
-        sx={{
-          fontSize: { lg: 22, xs: 15 },
-          p: { lg: 0.5, xs: 0 },
-          textTransform: 'none',
-          fontWeight: 600,
-          letterSpacing: '0.02em',
-        }}
-      >
-        My resume
-      </Typography>
-      <BsDownload style={{ fontSize: sm ? 15 : 22, marginLeft: 12 }} />
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: { lg: 1.5, xs: 1 } }}>
+        <Typography
+          sx={{
+            fontSize: { lg: 22, xs: 15 },
+            p: { lg: 0.5, xs: 0 },
+            textTransform: 'none',
+            fontWeight: 600,
+            letterSpacing: '0.02em',
+            color: isDone ? '#4caf50' : 'inherit',
+            transition: 'color 0.3s ease',
+          }}
+        >
+          {isLoading ? 'Downloading…' : isDone ? 'Downloaded!' : 'My Resume'}
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            color: isDone ? '#4caf50' : 'inherit',
+            transition: 'color 0.3s ease',
+            animation: isLoading ? 'bounce 0.55s ease-in-out infinite' : 'none',
+          }}
+        >
+          {isDone
+            ? <BsCheck2 style={{ fontSize: sm ? 18 : 24 }} />
+            : <BsDownload style={{ fontSize: sm ? 15 : 22 }} />}
+        </Box>
+      </Box>
     </Button>
   );
 
@@ -147,9 +248,23 @@ const Home: NextPage = () => {
                     mt: { lg: 0, xs: 3 },
                     letterSpacing: '-0.02em',
                     textShadow: '0 4px 20px rgba(252, 163, 17, 0.15)',
+                    minHeight: { lg: '92px', xs: '44px' },
                   }}
                 >
-                  Full-Stack Developer
+                  {displayText}
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '3px',
+                      height: '0.8em',
+                      backgroundColor: colors.orange,
+                      marginLeft: '4px',
+                      verticalAlign: 'middle',
+                      borderRadius: '2px',
+                      opacity: showCursor ? 1 : 0,
+                      transition: 'opacity 0.08s',
+                    }}
+                  />
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={12}>
@@ -188,29 +303,114 @@ const Home: NextPage = () => {
               lg={6}
               data-aos={sm ? '' : 'fade-right'}
             >
-              <Box
-                sx={{
+              <Box sx={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: { lg: 0, xs: 4 } }}>
+
+                {/* Rotating glow blob behind image */}
+                <Box sx={{
+                  position: 'absolute',
+                  width: { xl: '115%', lg: '115%', xs: '105%' },
+                  height: { xl: '115%', lg: '115%', xs: '105%' },
                   borderRadius: '30% 70% 58% 42% / 30% 25% 75% 70%',
-                  width: { xl: 450, lg: 400, xs: '80%' },
-                  height: { xl: 450, lg: 400, xs: 'auto' },
-                  maxWidth: { lg: 'none', xs: 320 },
-                  mx: { lg: 0, xs: 'auto' },
-                  objectFit: 'cover',
-                  border: `5px solid ${colors.tomato}`,
-                  filter: 'grayscale(30%)',
-                  boxShadow: `0 0 80px ${colors.glow}`,
-                  mt: { lg: 0, xs: 3 },
-                  transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                  '&:hover': {
-                    filter: 'grayscale(0%)',
-                    boxShadow: `0 0 100px rgba(255, 113, 91, 0.35)`,
-                    transform: 'scale(1.02)',
+                  background: `conic-gradient(from 0deg, ${colors.tomato}55, #8a5cff55, #00ffd135, ${colors.tomato}55)`,
+                  '@keyframes glowSpin': {
+                    '0%': { transform: 'rotate(0deg)' },
+                    '100%': { transform: 'rotate(360deg)' },
                   },
-                }}
-                component='img'
-                src={'./images/charles.jpg'}
-                alt='Charles Cabarrus - Full-Stack Developer'
-              />
+                  animation: 'glowSpin 9s linear infinite',
+                  filter: 'blur(22px)',
+                  zIndex: 0,
+                }} />
+
+                {/* Dashed orbit ring */}
+                <Box sx={{
+                  position: 'absolute',
+                  width: { xl: 520, lg: 465, xs: '108%' },
+                  height: { xl: 520, lg: 465, xs: '108%' },
+                  borderRadius: '50%',
+                  border: `1.5px dashed ${colors.tomato}45`,
+                  '@keyframes orbitSpin': {
+                    '0%': { transform: 'rotate(0deg)' },
+                    '100%': { transform: 'rotate(360deg)' },
+                  },
+                  animation: 'orbitSpin 18s linear infinite',
+                  zIndex: 0,
+                }} />
+
+                {/* Floating code chips — desktop only */}
+                {[
+                  { label: '</>', color: '#61DAFB', top: '4%',  left: '-22%', delay: '0s' },
+                  { label: '{ }', color: '#F7DF1E', top: '2%',  right: '-20%', delay: '0.7s' },
+                  { label: 'const', color: '#3178C6', top: '44%', left: '-24%', delay: '1.3s' },
+                  { label: '=> ()', color: colors.tomato, bottom: '18%', right: '-22%', delay: '0.4s' },
+                  { label: 'git push', color: '#339933', bottom: '4%', left: '-16%', delay: '1s' },
+                ].map((chip, i) => (
+                  <Box
+                    key={i}
+                    sx={{
+                      display: { xs: 'none', lg: 'flex' },
+                      alignItems: 'center',
+                      position: 'absolute',
+                      top: chip.top,
+                      bottom: (chip as any).bottom,
+                      left: (chip as any).left,
+                      right: (chip as any).right,
+                      zIndex: 3,
+                      px: 1.5,
+                      py: 0.7,
+                      borderRadius: '8px',
+                      background: 'rgba(10, 16, 30, 0.78)',
+                      border: `1px solid ${chip.color}55`,
+                      backdropFilter: 'blur(10px)',
+                      fontFamily: '"Fira Code", "Courier New", monospace',
+                      fontSize: '13px',
+                      color: chip.color,
+                      fontWeight: 600,
+                      whiteSpace: 'nowrap',
+                      boxShadow: `0 4px 20px ${chip.color}30`,
+                      letterSpacing: '0.04em',
+                      '@keyframes chipFloat': {
+                        '0%,100%': { transform: 'translateY(0px)' },
+                        '50%': { transform: 'translateY(-9px)' },
+                      },
+                      animation: `chipFloat 3.8s ease-in-out ${chip.delay} infinite`,
+                      userSelect: 'none',
+                    }}
+                  >
+                    <Box component='span' sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: chip.color, mr: 1, flexShrink: 0 }} />
+                    {chip.label}
+                  </Box>
+                ))}
+
+                {/* Profile image */}
+                <Box
+                  component='img'
+                  src={'./images/charles.jpg'}
+                  alt='Charles Cabarrus - Full-Stack Developer'
+                  sx={{
+                    position: 'relative',
+                    zIndex: 1,
+                    borderRadius: '30% 70% 58% 42% / 30% 25% 75% 70%',
+                    width: { xl: 450, lg: 400, xs: '80%' },
+                    height: { xl: 450, lg: 400, xs: 'auto' },
+                    maxWidth: { lg: 'none', xs: 320 },
+                    mx: { lg: 0, xs: 'auto' },
+                    objectFit: 'cover',
+                    border: `5px solid ${colors.tomato}`,
+                    filter: 'grayscale(25%)',
+                    boxShadow: `0 0 80px ${colors.glow}`,
+                    '@keyframes floatImg': {
+                      '0%,100%': { transform: 'translateY(0px)' },
+                      '50%': { transform: 'translateY(-18px)' },
+                    },
+                    animation: 'floatImg 4.8s ease-in-out infinite',
+                    transition: 'filter 0.6s ease, box-shadow 0.6s ease',
+                    '&:hover': {
+                      filter: 'grayscale(0%)',
+                      boxShadow: `0 0 130px rgba(255, 113, 91, 0.5)`,
+                    },
+                  }}
+                />
+              </Box>
             </Grid>
             {sm && (
               <Grid
