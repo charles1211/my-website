@@ -18,7 +18,7 @@ function useCountUp(target: number, duration = 1500) {
 
   useEffect(() => {
     if (!inView) return;
-    let raf: number;
+    let raf = 0;
     let start: number | null = null;
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
@@ -164,8 +164,8 @@ const AboutMe = () => {
           <Box ref={bioRef} sx={{ mb: 5 }}>
             {sm || shouldReduce ? (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={bioInView ? { opacity: 1, y: shouldReduce ? 0 : 0 } : {}}
+                initial={shouldReduce ? { opacity: 0 } : { opacity: 0, y: 20 }}
+                animate={bioInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5 }}
               >
                 <Typography variant="h6" sx={{ fontFamily: 'Roboto Slab', color: colors.textSecondary, fontSize: { lg: '1.25rem', xs: '1rem' }, lineHeight: 1.8 }}>
