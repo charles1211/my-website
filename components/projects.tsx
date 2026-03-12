@@ -25,6 +25,7 @@ export interface IData {
   visibility: string;
   type: string;
   responsibilities: string[];
+  category: 'Frontend' | 'Full-Stack' | 'Freelance'; // Added for filter tabs
 }
 
 interface ProjectsProps { }
@@ -107,7 +108,7 @@ const Projects = ({ }: ProjectsProps) => {
     setOpenDialog(false);
   }
 
-  const data = [
+  const data: IData[] = [
     {
       id: 9,
       name: 'InkSmith Studios',
@@ -119,6 +120,7 @@ const Projects = ({ }: ProjectsProps) => {
       visibility: 'public',
       type: '',
       responsibilities: [],
+      category: 'Full-Stack',
     },
     {
       id: 8,
@@ -131,6 +133,7 @@ const Projects = ({ }: ProjectsProps) => {
       visibility: 'public',
       type: '',
       responsibilities: [],
+      category: 'Full-Stack',
     },
     {
       id: 7,
@@ -143,6 +146,7 @@ const Projects = ({ }: ProjectsProps) => {
       visibility: 'public',
       type: '',
       responsibilities: [],
+      category: 'Full-Stack',
     },
     {
       id: 6,
@@ -155,6 +159,33 @@ const Projects = ({ }: ProjectsProps) => {
       visibility: 'public',
       type: '',
       responsibilities: [],
+      category: 'Frontend',
+    },
+    {
+      id: 11,
+      name: 'Cash Management System',
+      description: `The Cash Management System (CMS) is a web-based financial management platform designed to streamline cash position tracking and collection workflows for a multi-branch organization. It enables users to monitor and manage key financial records including deposits in transit, outstanding checks, bank transactions, and collection working files. The system supports end-to-end collection processing — from recording collections at the branch level up to consolidation at the head office cash position form. Deposits are tracked across multiple statuses such as Pending, Approved, Rejected, and Unaccounted, ensuring full visibility over the movement of funds. File attachments can be linked to transactions, with conditional rules applied based on collection type to streamline data entry. Overall, the system provides finance teams with a centralized, structured tool for maintaining accurate and up-to-date cash positions across all branches and banks.`,
+      techStack: ['Next.js 12', 'Material-UI v4', 'node.js', 'Apollo Client v3 (GraphQL)', 'TypeScript', 'Formik + Yup', 'Apollo Server (GraphQL API)', 'Prisma ORM', 'PostgreSQL', 'Azure Blob Storage'],
+      gitLink: '',
+      projectLink: '',
+      thumbnail: '/images/cmsthumbnail.png',
+      visibility: 'public',
+      type: '',
+      responsibilities: [],
+      category: 'Full-Stack',
+    },
+    {
+      id: 10,
+      name: 'Document Management System',
+      description: `This Document Management System (DMS) is a full-stack web application built with Next.js 14 and TypeScript, designed to centralize and control the lifecycle of organizational documents. It supports storing and retrieving files via Azure Blob Storage, with a Prisma ORM-backed database managing metadata, user records, and document relationships. The system enforces a multi-level document approval workflow (up to four approval stages) covering various document types including ISO documents, loan documents, departmental files, and other records. Access control is handled through document security levels and folder-level restrictions, ensuring only authorized users can view or interact with sensitive content. Users are authenticated via NextAuth, and the system provides automated email notifications (via Nodemailer) and scheduled tasks to support workflow progression. An audit trail module tracks all document activity, while built-in export capabilities (Excel/ZIP) and an in-browser document viewer round out the platform's feature set.`,
+      techStack: ['Next.js 14 (App Router)', 'React', 'node.js', 'Material UI (MUI v5)', 'TypeScript', 'Formik + Yup', 'Next.js API Routes (serverless)', 'Prisma ORM', 'NextAuth', 'Azure Blob Storage', 'MySQL'],
+      gitLink: '',
+      projectLink: '',
+      thumbnail: '/images/dmsthumbnail.png',
+      visibility: 'public',
+      type: '',
+      responsibilities: [],
+      category: 'Full-Stack',
     },
     {
       id: 1,
@@ -167,6 +198,7 @@ const Projects = ({ }: ProjectsProps) => {
       visibility: 'public',
       type: '',
       responsibilities: [],
+      category: 'Frontend',
     },
     {
       id: 2,
@@ -179,6 +211,7 @@ const Projects = ({ }: ProjectsProps) => {
       visibility: 'public',
       type: '',
       responsibilities: [],
+      category: 'Frontend',
     },
     {
       id: 3,
@@ -191,6 +224,7 @@ const Projects = ({ }: ProjectsProps) => {
       visibility: 'public',
       type: '',
       responsibilities: [],
+      category: 'Frontend',
     },
     {
       id: 4,
@@ -203,6 +237,7 @@ const Projects = ({ }: ProjectsProps) => {
       visibility: 'public',
       type: '',
       responsibilities: [],
+      category: 'Full-Stack',
     },
     {
       id: 5,
@@ -215,6 +250,7 @@ const Projects = ({ }: ProjectsProps) => {
       visibility: 'public',
       type: 'Freelance Project',
       responsibilities: ['Build the front-end design.', 'Build logical functionalities'],
+      category: 'Freelance',
     },
     {
       id: 6,
@@ -227,6 +263,7 @@ const Projects = ({ }: ProjectsProps) => {
       visibility: 'public',
       type: '',
       responsibilities: ['Build the front-end design.', 'Build logical functionalities'],
+      category: 'Frontend',
     },
   ];
 
