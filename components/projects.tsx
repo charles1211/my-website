@@ -109,13 +109,25 @@ const Projects = ({ }: ProjectsProps) => {
 
   const data = [
     {
-      id: 8,
+      id: 9,
       name: 'InkSmith Studios',
       description: `Built with Next.js 15 (App Router), TypeScript, Tailwind CSS v4, and Supabase for authentication, database, and file storage, this platform includes a public website with a live gallery carousel, artist roster, portfolio viewer, booking form, aftercare guide, and a contact form that sends emails via Gmail/Nodemailer. It features a booking system where customers submit appointment requests that the studio can review and manage, along with Supabase Auth for secure logins so customers can view their booking history. A protected admin CMS dashboard allows staff to manage artists with image uploads to Supabase Storage, update galleries, manage studio photos, and handle bookings without coding. The system includes server and client Supabase clients, middleware-based route protection, cloud image storage with public URLs, real-time data from Supabase Postgres, and a fully responsive dark luxury UI with custom animations and a Cinzel serif brand identity.`,
       techStack: ['react', 'next.js', 'node.js', 'lucide-react', 'typescript', 'tailwindcss', 'supabase'],
       gitLink: 'https://github.com/charles1211/InkSmith.git',
       projectLink: 'https://ink-smith.vercel.app/',
       thumbnail: '/images/inksmith.png',
+      visibility: 'public',
+      type: '',
+      responsibilities: [],
+    },
+    {
+      id: 8,
+      name: 'CVM Finance',
+      description: `CVM Finance's website is a modern, full-featured fintech platform designed to help Filipino borrowers discover, compare, and apply for loan products with ease. It features a clean light-themed design using Deep Ocean Blue and Bright Energy Yellow as brand colors, with smooth Framer Motion animations throughout every page. Visitors can explore four loan products Pension, Employment, and Collateral-backed loans each with detailed requirements, rates, and a direct inquiry flow. The site includes a live pension loan calculator, a searchable branch locator with 50+ locations, a multi-step loan guide, and a contact form with real-time validation. Built on Next.js 14 with a fully responsive layout, the website prioritizes trust, accessibility, and conversion — reflecting CVM Finance's 30 years of reliable service to over 30,000 Filipino clients.`,
+      techStack: ['react', 'next.js', 'node.js', 'shadcn/ui', 'typescript', 'tailwindcss', 'Lucide React', 'zod', 'react-hook-form'],
+      gitLink: 'https://github.com/charles1211/new-cvm-website.git',
+      projectLink: 'https://new-cvm-website.vercel.app/',
+      thumbnail: '/images/cvmthumbnail.png',
       visibility: 'public',
       type: '',
       responsibilities: [],
