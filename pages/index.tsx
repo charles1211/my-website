@@ -3,7 +3,18 @@ import type { NextPage } from 'next';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { BsDownload, BsCheck2 } from 'react-icons/bs';
-import { SiTypescript, SiJavascript, SiNodedotjs, SiReact, SiNextdotjs, SiCss3, SiHtml5 } from 'react-icons/si';
+import {
+  SiTypescript, SiJavascript, SiNodedotjs, SiReact, SiNextdotjs,
+  SiCss3, SiHtml5, SiPostgresql, SiMysql, SiSupabase, SiPrisma,
+  SiTailwindcss, SiGit, SiMicrosoftazure,
+} from 'react-icons/si';
+import type { IconType } from 'react-icons';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import {
+  charContainer, charItem, charContainerReduced, charItemReduced,
+  fadeUp, safeFadeUp, staggerContainer,
+} from '../lib/motionVariants';
+import { use3DTilt } from '../hooks/use3DTilt';
 import AboutMe from '../components/aboutMe';
 import Projects from '../components/projects';
 import { colors } from '../styles/theme/colors';
@@ -13,22 +24,14 @@ import ScrollToTopButton from '../common/scrollToTopButton';
 
 const roles = ['Full-Stack Developer', 'Frontend Developer', 'Backend Developer', 'Problem Solver'];
 
-const skills = [
-  { label: 'TypeScript', Icon: SiTypescript, color: '#3178C6' },
-  { label: 'JavaScript', Icon: SiJavascript, color: '#F7DF1E' },
-  { label: 'Node.js',    Icon: SiNodedotjs,  color: '#339933' },
-  { label: 'React',      Icon: SiReact,      color: '#61DAFB' },
-  { label: 'Next.js',    Icon: SiNextdotjs,  color: '#ffffff' },
-  { label: 'CSS',        Icon: SiCss3,       color: '#1572B6' },
-  { label: 'HTML',       Icon: SiHtml5,      color: '#E34F26' },
-];
-
 const Home: NextPage = () => {
   const router = useRouter();
 
   const theme = useTheme();
   const xl = useMediaQuery(theme.breakpoints.down('xl'));
   const sm = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const shouldReduce = useReducedMotion();
 
   const [displayText, setDisplayText] = useState('');
   const [roleIndex, setRoleIndex] = useState(0);
@@ -181,9 +184,24 @@ const Home: NextPage = () => {
         justifyContent='center'
         item
         xs={12}
-        sx={{ padding: { xl: 3, xs: 3 }, mt: { lg: 20, xs: 10 } }}
+        sx={{ padding: { xl: 3, xs: 3 }, mt: { lg: 20, xs: 10 }, position: 'relative' }}
         id='home-section'
       >
+        {/* Breathing dot-grid — scoped to hero section */}
+        <Box
+          aria-hidden="true"
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 0,
+            pointerEvents: 'none',
+            backgroundImage: 'radial-gradient(circle, rgba(255,113,91,0.35) 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
+            animation: 'breathe 4s ease-in-out infinite',
+            opacity: 0.06,
+          }}
+        />
+
         <Grid item xs={12} lg={10}>
           <Grid container alignItems='center' item xs={12} lg={12}>
             <Grid
@@ -195,92 +213,124 @@ const Home: NextPage = () => {
               data-aos={sm ? '' : 'fade-left'}
             >
               <Grid item xs={12} lg={12}>
-                <Typography
-                  sx={{
-                    fontWeight: 700,
-                    fontSize: { lg: 75, xs: 40 },
-                    textAlign: { xs: 'center', lg: 'start' },
-                    letterSpacing: '-0.03em',
-                  }}
+                {/* Animated "Hello." heading */}
+                <motion.div
+                  variants={shouldReduce ? charContainerReduced : charContainer}
+                  initial="hidden"
+                  animate="show"
+                  style={{ display: 'flex', flexWrap: 'wrap', justifyContent: isMdUp ? 'flex-start' : 'center' }}
                 >
-                  Hello<span style={{ color: colors.tomato }}>.</span>
-                </Typography>
+                  {'Hello.'.split('').map((char, i) => (
+                    <motion.span
+                      key={i}
+                      variants={shouldReduce ? charItemReduced : charItem}
+                      style={{
+                        fontWeight: 700,
+                        fontSize: 'clamp(40px, 8vw, 75px)',
+                        letterSpacing: '-0.03em',
+                        display: 'inline-block',
+                        color: char === '.' ? '#FF715B' : 'inherit',
+                      }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </motion.div>
               </Grid>
               <Grid container item xs={12} lg={12} sx={{ position: 'relative' }}>
-                <Grid item xs={12} lg={2}>
-                  <span>
-                    <Divider
+                <motion.div
+                  variants={safeFadeUp(0.5, shouldReduce ?? false)}
+                  initial="hidden"
+                  animate="show"
+                  style={{ position: 'relative', width: '100%' }}
+                >
+                  <Grid item xs={12} lg={2}>
+                    <span>
+                      <Divider
+                        sx={{
+                          position: 'absolute',
+                          height: 5,
+                          width: { lg: 300, xs: 100 },
+                          backgroundColor: colors.tomato,
+                          bottom: { lg: 25, xs: -4 },
+                          right: 0,
+                          ml: { lg: 0, xs: 'auto' },
+                          mr: { lg: 0, xs: 'auto' },
+                          left: { xl: -200, lg: -240, xs: 0 },
+                          borderRadius: '2px',
+                          boxShadow: `0 2px 8px ${colors.glow}`,
+                        }}
+                      />
+                    </span>
+                  </Grid>
+                  <Grid item xs={12} lg={10}>
+                    <Typography
                       sx={{
-                        position: 'absolute',
-                        height: 5,
-                        width: { lg: 300, xs: 100 },
-                        backgroundColor: colors.tomato,
-                        bottom: { lg: 25, xs: -4 },
-                        right: 0,
-                        ml: { lg: 0, xs: 'auto' },
-                        mr: { lg: 0, xs: 'auto' },
-                        left: { xl: -200, lg: -240, xs: 0 },
+                        fontWeight: 300,
+                        fontSize: { lg: 60, xs: 30 },
+                        textAlign: { xs: 'center', lg: 'start' },
+                        letterSpacing: '-0.01em',
+                      }}
+                    >{`I'm Charles`}</Typography>
+                  </Grid>
+                </motion.div>
+              </Grid>
+              <Grid item xs={12} lg={12}>
+                <motion.div
+                  variants={safeFadeUp(0.7, shouldReduce ?? false)}
+                  initial="hidden"
+                  animate="show"
+                >
+                  <Typography
+                    gutterBottom
+                    sx={{
+                      fontWeight: 700,
+                      color: colors.orange,
+                      fontSize: { lg: 75, xs: 30 },
+                      textAlign: { xs: 'center', lg: 'start' },
+                      mt: { lg: 0, xs: 3 },
+                      letterSpacing: '-0.02em',
+                      textShadow: '0 4px 20px rgba(252, 163, 17, 0.15)',
+                      minHeight: { lg: '92px', xs: '44px' },
+                    }}
+                  >
+                    {displayText}
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        width: '3px',
+                        height: '0.8em',
+                        backgroundColor: colors.orange,
+                        marginLeft: '4px',
+                        verticalAlign: 'middle',
                         borderRadius: '2px',
-                        boxShadow: `0 2px 8px ${colors.glow}`,
+                        opacity: showCursor ? 1 : 0,
+                        transition: 'opacity 0.08s',
                       }}
                     />
-                  </span>
-                </Grid>
-                <Grid item xs={12} lg={10}>
+                  </Typography>
+                </motion.div>
+              </Grid>
+              <Grid item xs={12} lg={12}>
+                <motion.div
+                  variants={safeFadeUp(0.9, shouldReduce ?? false)}
+                  initial="hidden"
+                  animate="show"
+                >
                   <Typography
                     sx={{
-                      fontWeight: 300,
-                      fontSize: { lg: 60, xs: 30 },
+                      color: colors.textSecondary,
+                      fontSize: { lg: 20, xs: 16 },
                       textAlign: { xs: 'center', lg: 'start' },
-                      letterSpacing: '-0.01em',
+                      mb: { lg: 2, xs: 1 },
+                      fontFamily: 'Roboto Slab',
+                      fontWeight: 300,
+                      lineHeight: 1.6,
                     }}
-                  >{`I'm Charles`}</Typography>
-                </Grid>
-              </Grid>
-              <Grid item xs={12} lg={12}>
-                <Typography
-                  gutterBottom
-                  sx={{
-                    fontWeight: 700,
-                    color: colors.orange,
-                    fontSize: { lg: 75, xs: 30 },
-                    textAlign: { xs: 'center', lg: 'start' },
-                    mt: { lg: 0, xs: 3 },
-                    letterSpacing: '-0.02em',
-                    textShadow: '0 4px 20px rgba(252, 163, 17, 0.15)',
-                    minHeight: { lg: '92px', xs: '44px' },
-                  }}
-                >
-                  {displayText}
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      width: '3px',
-                      height: '0.8em',
-                      backgroundColor: colors.orange,
-                      marginLeft: '4px',
-                      verticalAlign: 'middle',
-                      borderRadius: '2px',
-                      opacity: showCursor ? 1 : 0,
-                      transition: 'opacity 0.08s',
-                    }}
-                  />
-                </Typography>
-              </Grid>
-              <Grid item xs={12} lg={12}>
-                <Typography
-                  sx={{
-                    color: colors.textSecondary,
-                    fontSize: { lg: 20, xs: 16 },
-                    textAlign: { xs: 'center', lg: 'start' },
-                    mb: { lg: 2, xs: 1 },
-                    fontFamily: 'Roboto Slab',
-                    fontWeight: 300,
-                    lineHeight: 1.6,
-                  }}
-                >
-                  Building intuitive, scalable, and impactful digital experiences.
-                </Typography>
+                  >
+                    Building intuitive, scalable, and impactful digital experiences.
+                  </Typography>
+                </motion.div>
               </Grid>
               {!sm && (
                 <Grid
@@ -291,7 +341,14 @@ const Home: NextPage = () => {
                   xs={12}
                   lg={12}
                 >
-                  {resumeButton}
+                  <motion.div
+                    variants={safeFadeUp(1.1, shouldReduce ?? false)}
+                    initial="hidden"
+                    animate="show"
+                    style={{ display: 'flex', justifyContent: 'flex-start' }}
+                  >
+                    {resumeButton}
+                  </motion.div>
                 </Grid>
               )}
             </Grid>
@@ -306,108 +363,103 @@ const Home: NextPage = () => {
               <Box sx={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: { lg: 0, xs: 4 } }}>
 
                 {/* Rotating glow blob behind image */}
-                <Box sx={{
-                  position: 'absolute',
-                  width: { xl: '115%', lg: '115%', xs: '105%' },
-                  height: { xl: '115%', lg: '115%', xs: '105%' },
-                  borderRadius: '30% 70% 58% 42% / 30% 25% 75% 70%',
-                  background: `conic-gradient(from 0deg, ${colors.tomato}55, #8a5cff55, #00ffd135, ${colors.tomato}55)`,
-                  '@keyframes glowSpin': {
-                    '0%': { transform: 'rotate(0deg)' },
-                    '100%': { transform: 'rotate(360deg)' },
-                  },
-                  animation: 'glowSpin 9s linear infinite',
-                  filter: 'blur(22px)',
-                  zIndex: 0,
-                }} />
+                <motion.div
+                  aria-hidden="true"
+                  animate={shouldReduce ? {} : { rotate: 360 }}
+                  transition={{ duration: 9, repeat: Infinity, ease: 'linear' }}
+                  style={{
+                    position: 'absolute',
+                    width: '115%',
+                    height: '115%',
+                    borderRadius: '30% 70% 58% 42% / 30% 25% 75% 70%',
+                    background: 'conic-gradient(from 0deg, rgba(255,113,91,0.33), rgba(138,92,255,0.33), rgba(0,255,209,0.21), rgba(255,113,91,0.33))',
+                    filter: 'blur(22px)',
+                    zIndex: 0,
+                  }}
+                />
 
                 {/* Dashed orbit ring */}
-                <Box sx={{
-                  position: 'absolute',
-                  width: { xl: 520, lg: 465, xs: '108%' },
-                  height: { xl: 520, lg: 465, xs: '108%' },
-                  borderRadius: '50%',
-                  border: `1.5px dashed ${colors.tomato}45`,
-                  '@keyframes orbitSpin': {
-                    '0%': { transform: 'rotate(0deg)' },
-                    '100%': { transform: 'rotate(360deg)' },
-                  },
-                  animation: 'orbitSpin 18s linear infinite',
-                  zIndex: 0,
-                }} />
+                <motion.div
+                  aria-hidden="true"
+                  animate={shouldReduce ? {} : { rotate: 360 }}
+                  transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+                  style={{
+                    position: 'absolute',
+                    width: 465,
+                    height: 465,
+                    borderRadius: '50%',
+                    border: '1.5px dashed rgba(255,113,91,0.27)',
+                    zIndex: 0,
+                  }}
+                />
 
-                {/* Floating code chips — desktop only */}
-                {[
-                  { label: '</>', color: '#61DAFB', top: '4%',  left: '-22%', delay: '0s' },
-                  { label: '{ }', color: '#F7DF1E', top: '2%',  right: '-20%', delay: '0.7s' },
-                  { label: 'const', color: '#3178C6', top: '44%', left: '-24%', delay: '1.3s' },
-                  { label: '=> ()', color: colors.tomato, bottom: '18%', right: '-22%', delay: '0.4s' },
-                  { label: 'git push', color: '#339933', bottom: '4%', left: '-16%', delay: '1s' },
-                ].map((chip, i) => (
+                {/* Orbiting tech icons — desktop only */}
+                {!shouldReduce && orbitIcons.map(({ Icon, color, radius, duration, initialAngle }, i) => (
                   <Box
                     key={i}
                     sx={{
-                      display: { xs: 'none', lg: 'flex' },
-                      alignItems: 'center',
+                      display: { xs: 'none', lg: 'block' },
                       position: 'absolute',
-                      top: chip.top,
-                      bottom: (chip as any).bottom,
-                      left: (chip as any).left,
-                      right: (chip as any).right,
+                      top: '50%',
+                      left: '50%',
+                      width: 0,
+                      height: 0,
                       zIndex: 3,
-                      px: 1.5,
-                      py: 0.7,
-                      borderRadius: '8px',
-                      background: 'rgba(10, 16, 30, 0.78)',
-                      border: `1px solid ${chip.color}55`,
-                      backdropFilter: 'blur(10px)',
-                      fontFamily: '"Fira Code", "Courier New", monospace',
-                      fontSize: '13px',
-                      color: chip.color,
-                      fontWeight: 600,
-                      whiteSpace: 'nowrap',
-                      boxShadow: `0 4px 20px ${chip.color}30`,
-                      letterSpacing: '0.04em',
-                      '@keyframes chipFloat': {
-                        '0%,100%': { transform: 'translateY(0px)' },
-                        '50%': { transform: 'translateY(-9px)' },
-                      },
-                      animation: `chipFloat 3.8s ease-in-out ${chip.delay} infinite`,
-                      userSelect: 'none',
                     }}
                   >
-                    <Box component='span' sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: chip.color, mr: 1, flexShrink: 0 }} />
-                    {chip.label}
+                    {/* Outer ring rotates — initial angle sets starting position, target is +360 for full orbit */}
+                    <motion.div
+                      initial={{ rotate: initialAngle }}
+                      animate={{ rotate: initialAngle + 360 }}
+                      transition={{ duration, repeat: Infinity, ease: 'linear' }}
+                      style={{ position: 'absolute', width: 0, height: 0 }}
+                    >
+                      {/* Counter-rotate icon to keep it upright */}
+                      <motion.div
+                        initial={{ rotate: -initialAngle }}
+                        animate={{ rotate: -(initialAngle + 360) }}
+                        transition={{ duration, repeat: Infinity, ease: 'linear' }}
+                        style={{
+                          position: 'absolute',
+                          left: radius,
+                          top: -20,
+                          width: 40,
+                          height: 40,
+                          borderRadius: '50%',
+                          background: 'rgba(10,16,30,0.85)',
+                          border: `1px solid ${color}55`,
+                          backdropFilter: 'blur(8px)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: `0 4px 20px ${color}30`,
+                        }}
+                      >
+                        <Icon style={{ fontSize: 18, color }} />
+                      </motion.div>
+                    </motion.div>
                   </Box>
                 ))}
 
                 {/* Profile image */}
-                <Box
-                  component='img'
-                  src={'./images/charles.jpg'}
+                <motion.img
+                  src='./images/charles.jpg'
                   alt='Charles Cabarrus - Full-Stack Developer'
-                  sx={{
+                  animate={shouldReduce ? {} : { y: [0, -18, 0] }}
+                  transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+                  whileHover={{ filter: 'grayscale(0%)', boxShadow: '0 0 130px rgba(255,113,91,0.5)' }}
+                  style={{
                     position: 'relative',
                     zIndex: 1,
                     borderRadius: '30% 70% 58% 42% / 30% 25% 75% 70%',
-                    width: { xl: 450, lg: 400, xs: '80%' },
-                    height: { xl: 450, lg: 400, xs: 'auto' },
-                    maxWidth: { lg: 'none', xs: 320 },
-                    mx: { lg: 0, xs: 'auto' },
+                    width: 400,
+                    height: 400,
                     objectFit: 'cover',
-                    border: `5px solid ${colors.tomato}`,
+                    border: '5px solid #FF715B',
                     filter: 'grayscale(25%)',
-                    boxShadow: `0 0 80px ${colors.glow}`,
-                    '@keyframes floatImg': {
-                      '0%,100%': { transform: 'translateY(0px)' },
-                      '50%': { transform: 'translateY(-18px)' },
-                    },
-                    animation: 'floatImg 4.8s ease-in-out infinite',
+                    boxShadow: '0 0 80px rgba(255,113,91,0.2)',
                     transition: 'filter 0.6s ease, box-shadow 0.6s ease',
-                    '&:hover': {
-                      filter: 'grayscale(0%)',
-                      boxShadow: `0 0 130px rgba(255, 113, 91, 0.5)`,
-                    },
+                    maxWidth: '100%',
                   }}
                 />
               </Box>
@@ -429,85 +481,50 @@ const Home: NextPage = () => {
         </Grid>
       </Grid>
 
-      {/* Skills Bar */}
+      <ScrollIndicator />
+
+      {/* Section separator */}
       <Box
         sx={{
-          position: 'relative',
-          py: { lg: 4, xs: 3 },
-          overflow: 'hidden',
-          background: 'rgba(22, 35, 44, 0.65)',
-          backdropFilter: 'blur(12px)',
-          borderTop: `1px solid ${colors.border}`,
-          borderBottom: `1px solid ${colors.border}`,
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0, left: 0, bottom: 0,
-            width: { lg: 140, xs: 60 },
-            background: `linear-gradient(to right, ${colors.lightBlue} 0%, transparent 100%)`,
-            zIndex: 2,
-            pointerEvents: 'none',
-          },
-          '&::after': {
-            content: '""',
-            position: 'absolute',
-            top: 0, right: 0, bottom: 0,
-            width: { lg: 140, xs: 60 },
-            background: `linear-gradient(to left, ${colors.lightBlue} 0%, transparent 100%)`,
-            zIndex: 2,
-            pointerEvents: 'none',
-          },
+          width: '100%',
+          height: 60,
+          clipPath: 'polygon(0 0, 100% 0, 100% 60%, 0 100%)',
+          background: 'linear-gradient(135deg, rgba(255,113,91,0.06), transparent)',
+          mt: -1,
         }}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            width: 'max-content',
-            animation: 'scrollLeft 28s linear infinite',
-            '&:hover': { animationPlayState: 'paused' },
-          }}
+      />
+
+      {/* Tech Stack Section */}
+      <Box sx={{ py: { lg: 10, xs: 6 }, px: { lg: 20, xs: 3 } }}>
+        <motion.div
+          variants={staggerContainer(0.05)}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
         >
-          {[...skills, ...skills].map(({ label, Icon, color }, i) => (
-            <Box
-              key={i}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1.5,
-                mx: { lg: 2, xs: 1.5 },
-                px: { lg: 3, xs: 2 },
-                py: { lg: 1.5, xs: 1 },
-                borderRadius: '50px',
-                border: `1px solid ${colors.border}`,
-                background: 'rgba(255, 113, 91, 0.04)',
-                whiteSpace: 'nowrap',
-                cursor: 'default',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                '&:hover': {
-                  background: 'rgba(255, 113, 91, 0.12)',
-                  borderColor: colors.borderHover,
-                  transform: 'translateY(-3px)',
-                  boxShadow: `0 8px 24px ${colors.glow}`,
-                },
-              }}
-            >
-              <Icon style={{ fontSize: 20, color, flexShrink: 0 }} />
-              <Typography
-                sx={{
-                  color: colors.textSecondary,
-                  fontSize: { lg: 16, xs: 13 },
-                  fontWeight: 500,
-                  letterSpacing: '0.04em',
-                  transition: 'color 0.3s ease',
-                  '.MuiBox-root:hover &': { color: colors.textPrimary },
-                }}
-              >
-                {label}
-              </Typography>
-            </Box>
-          ))}
-        </Box>
+          <Typography
+            align="center"
+            sx={{ fontSize: { lg: 60, xs: 36 }, fontWeight: 700, letterSpacing: '-0.02em', mb: 6 }}
+          >
+            Tech Stack
+          </Typography>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: {
+                lg: 'repeat(7, auto)',
+                md: 'repeat(4, auto)',
+                xs: 'repeat(3, auto)',
+              },
+              justifyContent: 'center',
+              gap: { lg: 2.5, xs: 1.5 },
+            }}
+          >
+            {techStack.map((item) => (
+              <SkillCard key={item.label} {...item} />
+            ))}
+          </Box>
+        </motion.div>
       </Box>
 
       {/* About Section */}
@@ -538,3 +555,84 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+// ─── Sub-components (defined after Home to use hoisting-safe placement) ───────
+
+const ScrollIndicator = () => {
+  const { scrollY } = useScroll();
+  const opacity = useTransform(scrollY, [0, 200], [1, 0]);
+  const shouldReduce = useReducedMotion();
+  return (
+    <motion.div
+      style={{ opacity, display: 'flex', justifyContent: 'center', paddingTop: 16, paddingBottom: 8 }}
+    >
+      <motion.div
+        animate={shouldReduce ? {} : { y: [0, 8, 0] }}
+        transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
+        style={{ color: 'rgba(255,255,255,0.4)', fontSize: 28, lineHeight: 1 }}
+      >
+        ∨
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const orbitIcons = [
+  { Icon: SiReact,      color: '#61DAFB', radius: 130, duration: 12, initialAngle: 0   },
+  { Icon: SiTypescript, color: '#3178C6', radius: 180, duration: 16, initialAngle: 60  },
+  { Icon: SiNodedotjs,  color: '#339933', radius: 240, duration: 20, initialAngle: 120 },
+  { Icon: SiNextdotjs,  color: '#ffffff', radius: 160, duration: 14, initialAngle: 180 },
+  { Icon: SiCss3,       color: '#1572B6', radius: 200, duration: 18, initialAngle: 240 },
+  { Icon: SiHtml5,      color: '#E34F26', radius: 220, duration: 22, initialAngle: 300 },
+];
+
+const techStack: Array<{ label: string; Icon: IconType; color: string }> = [
+  { label: 'TypeScript',   Icon: SiTypescript,     color: '#3178C6' },
+  { label: 'JavaScript',   Icon: SiJavascript,     color: '#F7DF1E' },
+  { label: 'React',        Icon: SiReact,          color: '#61DAFB' },
+  { label: 'Next.js',      Icon: SiNextdotjs,      color: '#ffffff' },
+  { label: 'Node.js',      Icon: SiNodedotjs,      color: '#339933' },
+  { label: 'CSS',          Icon: SiCss3,           color: '#1572B6' },
+  { label: 'HTML',         Icon: SiHtml5,          color: '#E34F26' },
+  { label: 'PostgreSQL',   Icon: SiPostgresql,     color: '#336791' },
+  { label: 'MySQL',        Icon: SiMysql,          color: '#4479A1' },
+  { label: 'Supabase',     Icon: SiSupabase,       color: '#3ECF8E' },
+  { label: 'Prisma',       Icon: SiPrisma,         color: '#2D3748' },
+  { label: 'Tailwind CSS', Icon: SiTailwindcss,    color: '#06B6D4' },
+  { label: 'Git',          Icon: SiGit,            color: '#F05032' },
+  { label: 'Azure',        Icon: SiMicrosoftazure, color: '#0078D4' },
+];
+
+interface SkillCardProps { label: string; Icon: IconType; color: string; }
+
+const SkillCard = ({ label, Icon, color }: SkillCardProps) => {
+  const { ref, rotateXSpring, rotateYSpring, onMouseMove, onMouseLeave } = use3DTilt(15);
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      style={{ rotateX: rotateXSpring, rotateY: rotateYSpring, transformStyle: 'preserve-3d' }}
+      whileHover={{ y: -10, scale: 1.05 }}
+      variants={{ hidden: { y: 30, opacity: 0 }, show: { y: 0, opacity: 1, transition: { duration: 0.4 } } }}
+    >
+      <Box
+        sx={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          justifyContent: 'center', gap: 1, p: 2,
+          borderRadius: '16px',
+          background: 'rgba(255,113,91,0.04)',
+          border: '1px solid rgba(255,113,91,0.12)',
+          width: { lg: 90, xs: 70 }, height: { lg: 90, xs: 70 },
+          transition: 'border-color 0.3s, box-shadow 0.3s',
+          '&:hover': { borderColor: color, boxShadow: `0 8px 24px ${color}30` },
+        }}
+      >
+        <Icon style={{ fontSize: 36, color }} />
+        <Typography sx={{ fontSize: 11, color: '#A0AEC0', fontWeight: 500, textAlign: 'center', lineHeight: 1.2 }}>
+          {label}
+        </Typography>
+      </Box>
+    </motion.div>
+  );
+};
