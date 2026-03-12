@@ -1,304 +1,225 @@
+// components/aboutMe.tsx
+import { useEffect, useRef, useState } from 'react';
 import { Box, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { colors } from '../styles/theme/colors';
-import {
-  TimelineItem,
-  TimelineSeparator,
-  TimelineDot,
-  TimelineConnector,
-  TimelineContent,
-  Timeline,
-} from '@mui/lab';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
+import type { IconType } from 'react-icons';
 import { CgWebsite } from 'react-icons/cg';
+import { MdPhoneAndroid, MdCloud } from 'react-icons/md';
+import { colors } from '../styles/theme/colors';
+import GhostNumber from './GhostNumber';
+import { use3DTilt } from '../hooks/use3DTilt';
+import { safeStaggerContainer, safeFadeUp, fadeRight } from '../lib/motionVariants';
 
-interface AboutMeProps { }
+// ─── Count-up hook ─────────────────────────────────────────────────────────────
+function useCountUp(target: number, duration = 1500) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.5 });
 
-const services = ['Website Development', 'App Development', 'Website Hosting'];
+  useEffect(() => {
+    if (!inView) return;
+    let raf: number;
+    let start: number | null = null;
+    const step = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      setCount(Math.floor(eased * target));
+      if (progress < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf); // cleanup prevents memory leak on unmount
+  }, [inView, target, duration]);
 
-const AboutMe = ({ }: AboutMeProps) => {
-  const theme = useTheme();
-  const sm = useMediaQuery(theme.breakpoints.down('sm'));
+  return { count, ref };
+}
+
+// ─── StatCard ──────────────────────────────────────────────────────────────────
+interface StatCardProps { value: number; symbol: string; label: string; }
+
+const StatCard = ({ value, symbol, label }: StatCardProps) => {
+  const { count, ref: countRef } = useCountUp(value);
+  const { ref, rotateXSpring, rotateYSpring, onMouseMove, onMouseLeave } = use3DTilt(10);
 
   return (
-    <Grid container item xs={12} lg={12}>
-      {sm ? (
-        <Grid container item xs={12} spacing={2} sx={{ mb: 4 }} data-aos='fade-up'>
-          {services.map((service, index) => (
-            <Grid item xs={12} key={index}>
-              <Box
-                sx={{
-                  p: 2.5,
-                  borderRadius: '12px',
-                  backgroundColor: 'rgba(255, 113, 91, 0.08)',
-                  border: `1px solid ${colors.glow}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 2,
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 113, 91, 0.12)',
-                    transform: 'translateX(8px)',
-                  },
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 12,
-                    height: 12,
-                    borderRadius: '50%',
-                    backgroundColor: colors.tomato,
-                    flexShrink: 0,
-                  }}
-                />
-                <Typography variant='h6' sx={{ fontWeight: 500 }}>
-                  {service}
-                </Typography>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
-      ) : (
-        <Grid item xs={6} lg={6} data-aos='fade-left'>
-          <Grid
-            container
-            alignItems='center'
-            item
-            xs={12}
-            lg={12}
-            sx={{
-              mb: -5,
-              p: 2,
-              borderRadius: '12px',
-              transition: 'all 0.3s ease-in-out',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 113, 91, 0.05)',
-                transform: 'translateX(12px)',
-              },
-            }}
-          >
-            <Grid item xs={2} lg={2}>
-              <Timeline>
-                <TimelineItem>
-                  <TimelineSeparator>
-                    <TimelineConnector
-                      sx={{ height: 150, width: 5, backgroundColor: colors.tomato }}
-                    />
-                    <TimelineDot sx={{ width: 20, height: 20, backgroundColor: colors.tomato }} />
-                  </TimelineSeparator>
-                  <TimelineContent></TimelineContent>
-                </TimelineItem>
-              </Timeline>
-            </Grid>
-            <Grid item xs={2} lg={2}>
-              <Box
-                sx={{
-                  p: 2,
-                  borderRadius: '12px',
-                  backgroundColor: 'rgba(255, 113, 91, 0.1)',
-                  display: 'inline-flex',
-                }}
-              >
-                <CgWebsite style={{ fontSize: 80 }} />
-              </Box>
-            </Grid>
-            <Grid item xs={8} lg={8}>
-              <Typography variant='h5' sx={{ fontWeight: 600, letterSpacing: '0.01em' }}>
-                Website Development
-              </Typography>
-            </Grid>
-          </Grid>
+    <motion.div
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      style={{ rotateX: rotateXSpring, rotateY: rotateYSpring, transformStyle: 'preserve-3d', height: '100%' }}
+      whileHover={{ y: -8 }}
+    >
+      <Box
+        ref={countRef}
+        sx={{
+          p: { lg: 3, xs: 2 }, borderRadius: '16px',
+          backgroundColor: 'rgba(255,113,91,0.05)',
+          border: `1px solid ${colors.glow}`, height: '100%',
+          transition: 'all 0.4s cubic-bezier(0.4,0,0.2,1)',
+          '&:hover': { backgroundColor: 'rgba(255,113,91,0.1)', boxShadow: `0 12px 24px ${colors.glow}`, borderColor: colors.tomato },
+        }}
+      >
+        <Typography align="center" sx={{ fontWeight: 700, fontSize: { lg: 55, xs: 30 }, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
+          {count} <span style={{ color: colors.tomato }}>{symbol}</span>
+        </Typography>
+        <Typography align="center" sx={{ fontFamily: 'Roboto Slab', fontSize: { lg: 20, xs: 13 }, mt: 1, color: colors.textSecondary }}>
+          {label}
+        </Typography>
+      </Box>
+    </motion.div>
+  );
+};
 
-          <Grid
-            container
-            alignItems='center'
-            item
-            xs={12}
-            lg={12}
-            sx={{
-              p: 2,
-              borderRadius: '12px',
-              transition: 'all 0.3s ease-in-out',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 113, 91, 0.05)',
-                transform: 'translateX(12px)',
-              },
-            }}
-          >
-            <Grid item xs={2} lg={2}>
-              <Timeline>
-                <TimelineItem>
-                  <TimelineSeparator>
-                    <TimelineConnector
-                      sx={{ height: 150, width: 5, backgroundColor: colors.tomato }}
-                    />
-                    {/* <TimelineDot /> */}
-                  </TimelineSeparator>
-                  <TimelineContent></TimelineContent>
-                </TimelineItem>
-              </Timeline>
-            </Grid>
-            <Grid item xs={2} lg={2}>
-              <Box
-                sx={{
-                  p: 2,
-                  borderRadius: '12px',
-                  backgroundColor: 'rgba(255, 113, 91, 0.1)',
-                  display: 'inline-flex',
-                }}
-              >
-                <CgWebsite style={{ fontSize: 80 }} />
-              </Box>
-            </Grid>
-            <Grid item xs={8} lg={8}>
-              <Typography variant='h5' sx={{ fontWeight: 600, letterSpacing: '0.01em' }}>
-                App Development
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            alignItems='center'
-            item
-            xs={12}
-            lg={12}
-            sx={{
-              mt: -5,
-              p: 2,
-              borderRadius: '12px',
-              transition: 'all 0.3s ease-in-out',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 113, 91, 0.05)',
-                transform: 'translateX(12px)',
-              },
-            }}
-          >
-            <Grid item xs={2} lg={2}>
-              <Timeline>
-                <TimelineItem>
-                  <TimelineSeparator>
-                    <TimelineDot sx={{ width: 20, height: 20, backgroundColor: colors.tomato }} />
-                    <TimelineConnector
-                      sx={{ height: 150, width: 5, backgroundColor: colors.tomato }}
-                    />
-                  </TimelineSeparator>
-                  <TimelineContent></TimelineContent>
-                </TimelineItem>
-              </Timeline>
-            </Grid>
-            <Grid item xs={2} lg={2}>
-              <Box
-                sx={{
-                  p: 2,
-                  borderRadius: '12px',
-                  backgroundColor: 'rgba(255, 113, 91, 0.1)',
-                  display: 'inline-flex',
-                }}
-              >
-                <CgWebsite style={{ fontSize: 80 }} />
-              </Box>
-            </Grid>
-            <Grid item xs={8} lg={8}>
-              <Typography variant='h5' sx={{ fontWeight: 600, letterSpacing: '0.01em' }}>
-                Website Hosting
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-      )}
+// ─── ServiceCard ───────────────────────────────────────────────────────────────
+interface ServiceCardProps { Icon: IconType; title: string; description: string; }
 
-      <Grid item xs={12} lg={6} data-aos='fade-right'>
-        <Grid item xs={12} lg={12} sx={{ mb: { lg: 5, xs: 2 } }}>
-          <Typography
-            sx={{
-              fontSize: { lg: 80, xs: 50 },
-              fontWeight: 700,
-              textAlign: { lg: 'start', xs: 'center' },
-              letterSpacing: '-0.03em',
-              position: 'relative',
-              display: 'inline-block',
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                bottom: { lg: -10, xs: -5 },
-                left: { lg: 0, xs: '50%' },
-                transform: { lg: 'none', xs: 'translateX(-50%)' },
-                width: { lg: '40%', xs: '30%' },
-                height: '4px',
-                backgroundColor: colors.tomato,
-                borderRadius: '2px',
-              },
-            }}
-          >
-            About me
-          </Typography>
-        </Grid>
-        <Grid item xs={12} lg={12}>
-          <Typography
-            variant='h6'
-            sx={{
-              mb: 5,
-              fontFamily: 'Roboto Slab light',
-              textAlign: { lg: 'start', xs: 'center' },
-              color: colors.textSecondary,
-              letterSpacing: '0.01em',
-              fontSize: { lg: '1.25rem', xs: '1rem' },
-              lineHeight: 1.8,
-            }}
-          >
-            {`Hi! I'm a passionate and joyful full-stack developer with a love for building intuitive,
-            scalable, and impactful digital experiences. With a strong command of both front-end and
-            back-end development, I bring a dedicated mindset and positive energy to every project I
-            work on. I believe that great software is built not just with code—but with curiosity,
-            collaboration, and care.`}
-          </Typography>
-        </Grid>
-        <Grid container item xs={12} lg={12} spacing={2}>
-          {[
-            { value: '10', symbol: '+', label: 'Completed Projects' },
-            { value: '95', symbol: '%', label: 'Client Satisfaction' },
-            { value: '3', symbol: '+', label: 'Years of experience' },
-          ].map((stat, index) => (
-            <Grid item xs={4} lg={4} key={index}>
-              <Box
-                sx={{
-                  p: { lg: 3, xs: 2, },
-                  borderRadius: '16px',
-                  backgroundColor: 'rgba(255, 113, 91, 0.05)',
-                  border: `1px solid ${colors.glow}`,
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 113, 91, 0.1)',
-                    transform: 'translateY(-8px)',
-                    boxShadow: `0 12px 24px ${colors.glow}`,
-                    borderColor: colors.tomato,
-                  },
-                }}
+const ServiceCard = ({ Icon, title, description }: ServiceCardProps) => (
+  <Box
+    sx={{
+      p: '28px', borderRadius: '20px',
+      background: 'rgba(26,45,58,0.8)',
+      backdropFilter: 'blur(16px)',
+      border: '1px solid rgba(255,113,91,0.15)',
+      position: 'relative', overflow: 'hidden',
+      // Animated border trace: clip-path reveal on hover
+      '&::before': {
+        content: '""', position: 'absolute', inset: 0,
+        borderRadius: '20px',
+        border: '1px solid transparent',
+        backgroundOrigin: 'border-box',
+        // Standard + webkit mask for Firefox + Chrome
+        mask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+        maskComposite: 'exclude',
+        WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+        WebkitMaskComposite: 'destination-out',
+        backgroundImage: `linear-gradient(rgba(255,113,91,0.6), rgba(252,163,17,0.6))`,
+        transition: 'opacity 0.4s ease',
+        opacity: 0,
+      },
+      '&:hover::before': { opacity: 1 },
+    }}
+  >
+    <Box sx={{ p: 1.5, borderRadius: '12px', background: 'rgba(255,113,91,0.1)', display: 'inline-flex', mb: 2 }}>
+      <Icon style={{ fontSize: 40, color: colors.tomato }} />
+    </Box>
+    <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>{title}</Typography>
+    <Typography variant="body2" sx={{ color: colors.textSecondary, lineHeight: 1.7 }}>{description}</Typography>
+  </Box>
+);
+
+// ─── Data ──────────────────────────────────────────────────────────────────────
+const services: Array<{ Icon: IconType; title: string; description: string }> = [
+  { Icon: CgWebsite,       title: 'Web Development',  description: 'Building fast, scalable web apps with modern frameworks like Next.js and React.' },
+  { Icon: MdPhoneAndroid,  title: 'App Development',  description: 'Cross-platform experiences with clean architecture and smooth interactions.' },
+  { Icon: MdCloud,         title: 'Cloud & Hosting',  description: 'Deployment on Vercel, Azure, and Supabase with CI/CD and storage solutions.' },
+];
+
+const BIO =
+  `Hi! I'm a passionate and joyful full-stack developer with a love for building intuitive, ` +
+  `scalable, and impactful digital experiences. With a strong command of both front-end and ` +
+  `back-end development, I bring a dedicated mindset and positive energy to every project I ` +
+  `work on. I believe that great software is built not just with code—but with curiosity, ` +
+  `collaboration, and care.`;
+
+// ─── AboutMe ───────────────────────────────────────────────────────────────────
+const AboutMe = () => {
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down('sm'));
+  const shouldReduce = useReducedMotion();
+  const bioRef = useRef<HTMLDivElement>(null);
+  const bioInView = useInView(bioRef, { once: true, amount: 0.3 });
+  const bioWords = BIO.split(' ');
+
+  return (
+    <Grid container item xs={12} spacing={{ lg: 4, xs: 3 }}>
+      {/* Left: Bio + Stats */}
+      <Grid item xs={12} lg={6}>
+        <motion.div
+          variants={safeStaggerContainer(0.1, shouldReduce ?? false)}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          <motion.div variants={safeFadeUp(0, shouldReduce ?? false)}>
+            <Typography sx={{ fontSize: 14, letterSpacing: '0.15em', textTransform: 'uppercase', color: colors.tomato, fontFamily: 'monospace', mb: 1 }}>
+              {'// about me'}
+            </Typography>
+          </motion.div>
+
+          <motion.div variants={safeFadeUp(0.05, shouldReduce ?? false)} style={{ position: 'relative', marginBottom: 24 }}>
+            <GhostNumber number="02" top="-30px" left="-10px" />
+            <Typography
+              sx={{
+                fontSize: { lg: 80, xs: 50 }, fontWeight: 700, letterSpacing: '-0.03em',
+                background: `linear-gradient(135deg, ${colors.tomato} 0%, ${colors.orange} 100%)`,
+                backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                display: 'inline-block', position: 'relative', zIndex: 1,
+              }}
+            >
+              About me
+            </Typography>
+          </motion.div>
+
+          {/* Bio — word reveal on desktop, fade on mobile/reduced */}
+          <Box ref={bioRef} sx={{ mb: 5 }}>
+            {sm || shouldReduce ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={bioInView ? { opacity: 1, y: shouldReduce ? 0 : 0 } : {}}
+                transition={{ duration: 0.5 }}
               >
-                <Typography
-                  align='center'
-                  sx={{
-                    fontWeight: 700,
-                    fontSize: { lg: 55, xs: 30 },
-                    lineHeight: 1.2,
-                    letterSpacing: '-0.02em',
-                  }}
-                >
-                  {stat.value} <span style={{ color: colors.tomato }}>{stat.symbol}</span>
+                <Typography variant="h6" sx={{ fontFamily: 'Roboto Slab', color: colors.textSecondary, fontSize: { lg: '1.25rem', xs: '1rem' }, lineHeight: 1.8 }}>
+                  {BIO}
                 </Typography>
-                <Typography
-                  align='center'
-                  sx={{
-                    fontFamily: 'Roboto Slab light',
-                    fontSize: { lg: 20, xs: 13 },
-                    mt: 1,
-                    color: colors.textSecondary,
-                  }}
-                >
-                  {stat.label}
-                </Typography>
-              </Box>
-            </Grid>
+              </motion.div>
+            ) : (
+              <p style={{ fontFamily: '"Roboto Slab",serif', color: colors.textSecondary, fontSize: '1.25rem', lineHeight: 1.8, margin: 0, display: 'flex', flexWrap: 'wrap', gap: '0 6px' }}>
+                {bioWords.map((word, i) => (
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={bioInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: i * 0.015, duration: 0.3 }}
+                    style={{ display: 'inline-block' }}
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </p>
+            )}
+          </Box>
+
+          {/* Stats */}
+          <Grid container spacing={2}>
+            {[
+              { value: 10, symbol: '+', label: 'Completed Projects' },
+              { value: 95, symbol: '%', label: 'Client Satisfaction' },
+              { value: 3,  symbol: '+', label: 'Years of experience' },
+            ].map((stat) => (
+              <Grid item xs={4} key={stat.label}>
+                <StatCard {...stat} />
+              </Grid>
+            ))}
+          </Grid>
+        </motion.div>
+      </Grid>
+
+      {/* Right: Service Cards */}
+      <Grid item xs={12} lg={6}>
+        <motion.div
+          variants={safeStaggerContainer(0.12, shouldReduce ?? false)}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          style={{ display: 'flex', flexDirection: 'column', gap: 16, height: '100%' }}
+        >
+          {services.map((service) => (
+            // Use fadeRight(0) — staggerChildren handles timing, no manual delay offset
+            <motion.div key={service.title} variants={shouldReduce ? safeFadeUp(0, true) : fadeRight(0)}>
+              <ServiceCard {...service} />
+            </motion.div>
           ))}
-        </Grid>
+        </motion.div>
       </Grid>
     </Grid>
   );
