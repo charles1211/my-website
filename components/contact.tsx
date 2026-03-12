@@ -1,63 +1,65 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  TextField,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+// components/contact.tsx
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { colors } from '../styles/theme/colors';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { MdEmail } from 'react-icons/md';
+import { BsLinkedin } from 'react-icons/bs';
+import { FaGithub } from 'react-icons/fa';
+import GhostNumber from './GhostNumber';
+import { safeFadeUp } from '../lib/motionVariants';
 
-const styles = {
-  bgImg: {
-    backgroundImage: `url(/images/contactus.png)`,
-    height: 800,
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: '100% 1200px',
+// ─── Confetti burst ────────────────────────────────────────────────────────────
+const CONFETTI_COLORS = [colors.tomato, colors.orange, '#61DAFB', '#3ECF8E', '#A78BFA'];
+
+const ConfettiBurst = () => (
+  <>
+    {Array.from({ length: 12 }).map((_, i) => {
+      const angle = (i / 12) * 2 * Math.PI;
+      const dist  = 60 + Math.random() * 40;
+      return (
+        <motion.div
+          key={i}
+          initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+          animate={{ x: Math.cos(angle) * dist, y: Math.sin(angle) * dist, opacity: 0, scale: 0.3 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          style={{
+            position: 'absolute', width: 8, height: 8, borderRadius: '50%',
+            backgroundColor: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+            top: '50%', left: '50%', marginLeft: -4, marginTop: -4,
+            pointerEvents: 'none',
+          }}
+        />
+      );
+    })}
+  </>
+);
+
+// ─── Quick contacts ────────────────────────────────────────────────────────────
+const QUICK_CONTACTS = [
+  { label: 'Email',    Icon: MdEmail,    href: 'mailto:charlescabarrus99@gmail.com' },
+  { label: 'LinkedIn', Icon: BsLinkedin, href: 'https://www.linkedin.com/in/charles-rhobert-cabarrus-3201ba138/' },
+  { label: 'GitHub',   Icon: FaGithub,   href: 'https://github.com/charles1211' },
+];
+
+// ─── Glass text field sx ───────────────────────────────────────────────────────
+const glassSx = {
+  '& .MuiOutlinedInput-root': {
+    color: 'white', fontSize: { lg: 18, xs: 16 },
+    '& fieldset': { borderColor: 'rgba(255,255,255,0.15)', transition: 'border-color 0.3s ease' },
+    '&:hover fieldset': { borderColor: 'rgba(255,113,91,0.4)' },
+    '&.Mui-focused fieldset': { borderColor: colors.tomato, borderWidth: 2 },
+  },
+  '& .MuiInputLabel-root': {
+    color: 'rgba(255,255,255,0.5)', fontSize: { lg: 18, xs: 16 },
+    '&.Mui-focused': { color: colors.tomato },
   },
 };
 
-const textFieldSx = (sm: boolean) => ({
-  '& .MuiInputBase-root': {
-    color: 'white',
-    fontSize: { lg: 25, xs: 20 },
-    fontWeight: 400,
-    transition: 'all 0.3s ease-in-out',
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: colors.tomato,
-    borderBottomWidth: 3,
-  },
-  '& .MuiInput-underline:before': {
-    borderBottomColor: 'rgba(255, 255, 255, 0.3)',
-    borderBottomWidth: 2,
-  },
-  '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
-    borderBottomColor: colors.tomato,
-    borderBottomWidth: 2,
-  },
-});
-
-const textFieldLabelProps = (sm: boolean) => ({
-  style: {
-    color: colors.tomato,
-    fontSize: sm ? 20 : 25,
-    fontWeight: 500,
-    letterSpacing: '0.02em',
-  },
-});
-
-interface ContactsProps {}
-
-const Contacts = ({}: ContactsProps) => {
-  const theme = useTheme();
-  const xl = useMediaQuery(theme.breakpoints.down('xl'));
-  const sm = useMediaQuery(theme.breakpoints.down('sm'));
+// ─── Contacts ──────────────────────────────────────────────────────────────────
+const Contacts = () => {
+  const shouldReduce = useReducedMotion() ?? false;
 
   const [initialValue, setInitialValue] = useState({
     email: 'charlescabarrus99@gmail.com',
@@ -65,7 +67,9 @@ const Contacts = ({}: ContactsProps) => {
     subject: '',
     message: '',
   });
+  const [submitted, setSubmitted] = useState(false); // drives confetti burst
 
+  // ── Business logic — UNCHANGED from original ─────────────────────────────────
   function isValidEmail(email: string) {
     return /\S+@\S+\.\S+/.test(email);
   }
@@ -84,235 +88,175 @@ const Contacts = ({}: ContactsProps) => {
       headers: { 'Content-Type': 'application/json' },
     });
     toast.success('Email sent!');
-    setInitialValue({
-      email: 'charlescabarrus99@gmail.com',
-      sender: '',
-      subject: '',
-      message: '',
-    });
+    // ── Only addition: trigger confetti, auto-reset after animation completes ──
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 900);
+
+    setInitialValue({ email: 'charlescabarrus99@gmail.com', sender: '', subject: '', message: '' });
   }
+  // ─────────────────────────────────────────────────────────────────────────────
 
   return (
     <Grid
-      container
-      justifyContent='center'
-      item
-      xs={12}
-      // id='contact-section'
-      data-aos='zoom-in-up'
+      container justifyContent="center" item xs={12}
+      data-aos="zoom-in-up"
       sx={{ mt: { lg: 10, xs: 5 }, mb: { lg: 20, xs: 8 } }}
     >
       <Grid item xs={12} lg={10}>
-        <Grid container item xs={12} lg={12}>
-          <Grid container item xs={12} lg={12} sx={{ position: 'relative', mb: 4 }}>
-            <Grid item xs={1} lg={1}>
-              <span>
-                <Divider
-                  sx={{
-                    height: 5,
-                    width: { lg: 300, xs: 100 },
-                    backgroundColor: colors.tomato,
-                    position: 'absolute',
-                    bottom: { lg: 15, xs: 0 },
-                    left: { xl: -200, lg: -240, xs: 0 },
-                    right: 0,
-                    ml: { lg: 0, xs: 'auto' },
-                    mr: { lg: 0, xs: 'auto' },
-                    borderRadius: '2px',
-                    boxShadow: `0 2px 8px ${colors.borderHover}`,
-                  }}
-                />
-              </span>
-            </Grid>
-            <Grid item xs={12} lg={10}>
-              <Typography
-                sx={{
-                  fontSize: 40,
-                  textAlign: { lg: 'start', xs: 'center' },
-                  fontWeight: 600,
-                  letterSpacing: '0.05em',
-                  opacity: 0.9,
-                }}
-              >
-                Contacts
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item justifyContent='center' xs={12} lg={6} data-aos='zoom-in-up'>
-            <Grid item xs={12} lg={12}>
-              <Typography
-                gutterBottom
-                sx={{
-                  fontSize: { xl: 90, lg: 70, xs: 40 },
-                  fontWeight: 700,
-                  color: colors.orange,
-                  textAlign: { lg: 'start', xs: 'center' },
-                  mt: { lg: 0, xs: 2 },
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1.1,
-                  textShadow: '0 4px 20px rgba(252, 163, 17, 0.2)',
-                }}
-              >
-                Have a project?
-              </Typography>
-            </Grid>
-            <Grid item xs={12} lg={12}>
-              <Typography
-                gutterBottom
-                sx={{
-                  fontSize: { xl: 90, lg: 70, xs: 35 },
-                  fontWeight: 700,
-                  color: colors.orange,
-                  textAlign: { lg: 'start', xs: 'center' },
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1.1,
-                  mb: 4,
-                  textShadow: '0 4px 20px rgba(252, 163, 17, 0.2)',
-                }}
-              >
-                {` Let's talk!`}
-              </Typography>
-            </Grid>
-            {!sm && (
-              <Grid container alignItems='center' item xs={12} lg={12}>
-                <Button
-                  variant='contained'
-                  sx={{
-                    backgroundColor: colors.tomato,
-                    borderRadius: '14px',
-                    px: 6,
-                    py: 2,
-                    boxShadow: `0 8px 24px ${colors.borderHover}`,
-                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                    '&:hover': {
-                      backgroundColor: colors.orange,
-                      transform: 'translateY(-4px)',
-                      boxShadow: `0 12px 32px ${colors.borderHover}`,
-                    },
-                    '&:active': {
-                      transform: 'translateY(-2px)',
-                    },
-                  }}
-                  onClick={handleSubmit}
-                >
-                  <Typography
-                    sx={{
-                      fontSize: 25,
-                      p: 1,
-                      textTransform: 'none',
-                      pl: 4,
-                      pr: 4,
-                      fontWeight: 600,
-                      letterSpacing: '0.02em',
+        <Grid container item xs={12} spacing={{ lg: 6, xs: 3 }}>
+
+          {/* Left: CTA + quick contacts */}
+          <Grid item xs={12} lg={6}>
+            <motion.div
+              variants={safeFadeUp(0, shouldReduce)}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+            >
+              <Box sx={{ position: 'relative', mb: 2 }}>
+                <GhostNumber number="04" top="-20px" left="-10px" />
+                <Typography sx={{ fontSize: { lg: 18, xs: 16 }, color: colors.tomato, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', mb: 1, position: 'relative', zIndex: 1 }}>
+                  Contacts
+                </Typography>
+              </Box>
+
+              {/* Word-reveal on headings */}
+              <Box sx={{ mb: 1 }}>
+                {'Have a project?'.split(' ').map((word, i) => (
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0, y: shouldReduce ? 0 : 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1, duration: 0.4 }}
+                    style={{
+                      display: 'inline-block', marginRight: '0.3em',
+                      fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.1,
+                      color: colors.orange,
+                      fontSize: 'clamp(32px, 6vw, 70px)',
+                      textShadow: '0 4px 20px rgba(252,163,17,0.2)',
                     }}
                   >
-                    Submit
-                  </Typography>
-                </Button>
-              </Grid>
-            )}
+                    {word}
+                  </motion.span>
+                ))}
+              </Box>
+              <Box sx={{ mb: 4 }}>
+                {"Let's talk!".split(' ').map((word, i) => (
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0, y: shouldReduce ? 0 : 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
+                    style={{
+                      display: 'inline-block', marginRight: '0.3em',
+                      fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.1,
+                      color: colors.orange,
+                      fontSize: 'clamp(28px, 5.5vw, 70px)',
+                      textShadow: '0 4px 20px rgba(252,163,17,0.2)',
+                    }}
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </Box>
+
+              {/* Quick-contact chips */}
+              <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+                {QUICK_CONTACTS.map(({ label, Icon, href }) => (
+                  <Box
+                    key={label}
+                    component="a"
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-magnetic
+                    sx={{
+                      display: 'flex', alignItems: 'center', gap: 1, px: 2, py: 1,
+                      borderRadius: '50px', border: '1px solid rgba(255,113,91,0.2)',
+                      background: 'rgba(255,113,91,0.05)', color: colors.textSecondary,
+                      fontSize: 14, fontWeight: 500, textDecoration: 'none',
+                      transition: 'all 0.3s ease',
+                      '&:hover': { borderColor: colors.tomato, backgroundColor: 'rgba(255,113,91,0.12)', color: 'white', transform: 'translateY(-2px)' },
+                    }}
+                  >
+                    <Icon style={{ fontSize: 16 }} />
+                    {label}
+                  </Box>
+                ))}
+              </Box>
+            </motion.div>
           </Grid>
-          <Grid item xs={12} lg={6} data-aos='zoom-in-up'>
-            <Box
-              sx={{
-                p: { lg: 4, xs: 3 },
-                borderRadius: '20px',
-                backgroundColor: colors.surface,
-                border: `1px solid ${colors.glow}`,
-                backdropFilter: 'blur(10px)',
-              }}
+
+          {/* Right: Glassmorphism form */}
+          <Grid item xs={12} lg={6}>
+            <motion.div
+              variants={safeFadeUp(0.15, shouldReduce)}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
             >
-              <Grid
-                container
-                justifyContent='center'
-                item
-                xs={12}
-                lg={12}
-                spacing={3}
+              <Box
+                sx={{
+                  p: { lg: 4, xs: 3 }, borderRadius: '20px',
+                  background: 'rgba(26,45,58,0.6)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255,113,91,0.2)',
+                  boxShadow: 'inset 0 1px 0 rgba(255,113,91,0.15)',
+                }}
               >
-                <Grid item xs={12} lg={10}>
-                  <TextField
-                    fullWidth
-                    label='Your email'
-                    placeholder=' '
-                    variant='standard'
-                    type='email'
-                    value={initialValue.sender}
-                    onChange={(e) => {
-                      setInitialValue({ ...initialValue, sender: e.target.value });
-                    }}
-                    sx={textFieldSx(sm)}
-                    InputLabelProps={textFieldLabelProps(sm)}
-                  />
-                </Grid>
-                <Grid item xs={12} lg={10}>
-                  <TextField
-                    fullWidth
-                    label='Subject'
-                    placeholder=' '
-                    variant='standard'
-                    value={initialValue.subject}
-                    onChange={(e) => {
-                      setInitialValue({ ...initialValue, subject: e.target.value });
-                    }}
-                    sx={textFieldSx(sm)}
-                    InputLabelProps={textFieldLabelProps(sm)}
-                  />
-                </Grid>
-                <Grid item xs={12} lg={10}>
-                  <TextField
-                    fullWidth
-                    label='Message'
-                    placeholder=' '
-                    variant='standard'
-                    multiline
-                    rows={4}
-                    value={initialValue.message}
-                    onChange={(e) => {
-                      setInitialValue({ ...initialValue, message: e.target.value });
-                    }}
-                    sx={textFieldSx(sm)}
-                    InputLabelProps={textFieldLabelProps(sm)}
-                  />
-                </Grid>
-                {sm && (
-                  <Grid container justifyContent='center' alignItems='center' item xs={12} lg={12}>
-                    <Button
-                      variant='contained'
-                      sx={{
-                        backgroundColor: colors.tomato,
-                        borderRadius: '14px',
-                        px: 4,
-                        py: 1.5,
-                        boxShadow: `0 8px 24px ${colors.borderHover}`,
-                        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                        '&:hover': {
-                          backgroundColor: colors.orange,
-                          transform: 'translateY(-4px)',
-                          boxShadow: `0 12px 32px ${colors.borderHover}`,
-                        },
-                      }}
-                      onClick={handleSubmit}
-                    >
-                      <Typography
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <TextField fullWidth label="Your email" variant="outlined" type="email"
+                      value={initialValue.sender}
+                      onChange={(e) => setInitialValue({ ...initialValue, sender: e.target.value })}
+                      sx={glassSx}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField fullWidth label="Subject" variant="outlined"
+                      value={initialValue.subject}
+                      onChange={(e) => setInitialValue({ ...initialValue, subject: e.target.value })}
+                      sx={glassSx}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField fullWidth label="Message" variant="outlined" multiline rows={4}
+                      value={initialValue.message}
+                      onChange={(e) => setInitialValue({ ...initialValue, message: e.target.value })}
+                      sx={glassSx}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    {/* Confetti wrapper — key prop required for AnimatePresence lifecycle tracking */}
+                    <Box sx={{ position: 'relative' }}>
+                      <AnimatePresence>
+                        {submitted && <ConfettiBurst key="confetti" />}
+                      </AnimatePresence>
+                      <Button
+                        fullWidth variant="contained" data-magnetic
+                        onClick={handleSubmit}
                         sx={{
-                          fontSize: 15,
-                          p: 1,
-                          textTransform: 'none',
-                          pl: 2,
-                          pr: 2,
-                          fontWeight: 600,
-                          letterSpacing: '0.02em',
+                          background: `linear-gradient(135deg, ${colors.tomato} 0%, ${colors.orange} 100%)`,
+                          borderRadius: '14px', py: 1.8,
+                          textTransform: 'none', fontSize: { lg: 18, xs: 16 },
+                          fontWeight: 600, letterSpacing: '0.02em',
+                          boxShadow: '0 8px 24px rgba(255,113,91,0.3)',
+                          transition: 'all 0.3s ease',
+                          '&:hover': { background: `linear-gradient(135deg, ${colors.orange} 0%, ${colors.tomato} 100%)`, transform: 'translateY(-3px)', boxShadow: '0 12px 32px rgba(255,113,91,0.4)' },
+                          '&:active': { transform: 'translateY(-1px)' },
                         }}
                       >
-                        Submit
-                      </Typography>
-                    </Button>
+                        Send Message
+                      </Button>
+                    </Box>
                   </Grid>
-                )}
-              </Grid>
-            </Box>
+                </Grid>
+              </Box>
+            </motion.div>
           </Grid>
+
         </Grid>
       </Grid>
     </Grid>
