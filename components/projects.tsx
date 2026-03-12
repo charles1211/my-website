@@ -281,7 +281,7 @@ const ProjectCard = ({ data: x, onMoreInfo, shouldReduce }: ProjectCardProps) =>
         {isPublic ? (
           <Button
             data-magnetic
-            onClick={() => window.open(x.projectLink)}
+            onClick={() => window.open(x.projectLink, '_blank', 'noopener,noreferrer')}
             sx={{ color: 'white', p: 0, textTransform: 'none', '&:hover': { color: colors.tomato } }}
           >
             <Typography sx={{ fontSize: 14, fontWeight: 500, textDecoration: 'underline', textDecorationColor: colors.tomato, textUnderlineOffset: 5 }}>
@@ -322,7 +322,9 @@ const Projects = () => {
     <Grid item xs={12}>
       {/* Heading */}
       <Box sx={{ position: 'relative', mb: 2, textAlign: 'center' }}>
-        <GhostNumber number="03" left="50%" top="-30px" />
+        <Box sx={{ position: 'absolute', left: '50%', top: '-30px', transform: 'translateX(-50%)', pointerEvents: 'none', zIndex: 0 }}>
+          <GhostNumber number="03" left="0" top="0" />
+        </Box>
         <motion.div variants={safeFadeUp(0, shouldReduce)} initial="hidden" whileInView="show" viewport={{ once: true }}>
           <Typography align="center" sx={{ fontSize: { lg: 80, xs: 45 }, fontWeight: 600, letterSpacing: '-0.02em', position: 'relative', zIndex: 1 }}>
             Projects
