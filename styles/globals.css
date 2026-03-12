@@ -1,13 +1,32 @@
+/* styles/globals.css */
+
 html {
   scroll-behavior: smooth;
 }
 
-html,
-body {
+html, body {
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
     Fira Sans, Droid Sans, Helvetica Neue, sans-serif, Roboto Slab;
+}
+
+/* Hide default cursor when MagneticCursor is active */
+body.hide-cursor,
+body.hide-cursor * {
+  cursor: none !important;
+}
+
+/* Restore cursor + hide magnetic cursor div on touch devices.
+   Use cursor:revert (not auto) to restore UA defaults (text, pointer, etc.) */
+@media (pointer: coarse) {
+  body.hide-cursor,
+  body.hide-cursor * {
+    cursor: revert !important;
+  }
+  .magnetic-cursor-root {
+    display: none !important;
+  }
 }
 
 a {
@@ -30,20 +49,22 @@ a {
   border-radius: 4px;
 }
 
-@keyframes scrollLeft {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: rgba(18, 31, 40, 0.5); }
+::-webkit-scrollbar-thumb { background: #FF715B; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #fca311; }
+
+/* Hero background dot-grid breathing */
+@keyframes breathe {
+  0%, 100% { opacity: 0.04; }
+  50%       { opacity: 0.10; }
 }
 
+/* ScrollToTopButton fade-in */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .scroll-to-top {
@@ -56,10 +77,7 @@ a {
 }
 
 @media only screen and (max-width: 600px) {
-  .scroll-to-top {
-    bottom: 5rem;
-    right: 1.5rem;
-  }
+  .scroll-to-top { bottom: 5rem; right: 1.5rem; }
 }
 
 .social-media-links {
@@ -68,21 +86,14 @@ a {
   margin-right: 15px;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
 }
-
 .social-media-links:hover {
   color: #fca311;
   transform: scale(1.2);
 }
 
-.image-gallery-left-nav .image-gallery-svg {
-  height: 50px;
-  width: 50px;
-}
-.image-gallery-right-nav .image-gallery-svg {
-  height: 50px;
-  width: 50px;
-}
-
+/* react-image-gallery (unchanged) */
+.image-gallery-left-nav .image-gallery-svg  { height: 50px; width: 50px; }
+.image-gallery-right-nav .image-gallery-svg { height: 50px; width: 50px; }
 .image-gallery-content .image-gallery-slide .image-gallery-image {
   max-height: calc(100vh - 80px);
   border-radius: 20px;
@@ -94,37 +105,7 @@ a {
   line-height: 0;
   border-radius: 10px;
 }
+.image-gallery-thumbnail { margin-top: 20px; }
 
-.image-gallery-thumbnail {
-  margin-top: 20px;
-}
-
-.react-multiple-carousel__arrow--right {
-  right: calc(1% + 1px) !important;
-}
-.react-multiple-carousel__arrow--left {
-  left: calc(1% + 1px) !important;
-}
-
-.react-multiple-carousel__arrow {
-  position: absolute;
-  outline: 0;
-  transition: all 0.5s;
-  border-radius: 35px;
-  border: 0;
-  background: rgba(0, 0, 0, 0.5);
-  min-width: 28px !important;
-  min-height: 28px !important;
-  opacity: 1;
-  cursor: pointer;
-  top: 50px;
-}
-
-.react-multiple-carousel__arrow::before {
-  font-size: 15px !important;
-  color: #fff;
-  display: block;
-  font-family: revicons;
-  text-align: center;
-  position: relative;
-}
+/* NOTE: @keyframes scrollLeft REMOVED — marquee deleted in Task 11 */
+/* NOTE: .react-multiple-carousel__arrow rules REMOVED — carousel replaced with scroll-snap */
