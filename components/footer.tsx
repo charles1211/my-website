@@ -69,6 +69,7 @@ const Footer = ({}: FooterProps) => {
             background: `linear-gradient(90deg, ${colors.tomato}, ${colors.orange}, ${colors.tomato})`,
             backgroundSize: '200% 100%',
             animation: 'borderShift 4s linear infinite',
+            pointerEvents: 'none',
           },
           '&::after': {
             content: '""',
@@ -104,16 +105,16 @@ const Footer = ({}: FooterProps) => {
           </Typography>
         </Grid>
         <Grid container justifyContent="center" alignItems="center" item xs={12} sx={{ gap: 2 }}>
-          <Box sx={socialIconSx} onClick={() => window.open('https://www.facebook.com/charles.cabarrus')}>
+          <Box sx={socialIconSx} onClick={() => window.open('https://www.facebook.com/charles.cabarrus', '_blank', 'noopener,noreferrer')}>
             <BsFacebook style={{ fontSize: iconSize, color: 'white' }} />
           </Box>
-          <Box sx={socialIconSx} onClick={() => window.open('https://www.instagram.com/ltscharlesilog/')}>
+          <Box sx={socialIconSx} onClick={() => window.open('https://www.instagram.com/ltscharlesilog/', '_blank', 'noopener,noreferrer')}>
             <BsInstagram style={{ fontSize: iconSize, color: 'white' }} />
           </Box>
-          <Box sx={socialIconSx} onClick={() => window.open('https://www.linkedin.com/in/charles-rhobert-cabarrus-3201ba138/')}>
+          <Box sx={socialIconSx} onClick={() => window.open('https://www.linkedin.com/in/charles-rhobert-cabarrus-3201ba138/', '_blank', 'noopener,noreferrer')}>
             <BsLinkedin style={{ fontSize: iconSize, color: 'white' }} />
           </Box>
-          <Box sx={socialIconSx} onClick={() => window.open('https://github.com/charles1211')}>
+          <Box sx={socialIconSx} onClick={() => window.open('https://github.com/charles1211', '_blank', 'noopener,noreferrer')}>
             <FaGithub style={{ fontSize: iconSize, color: 'white' }} />
           </Box>
         </Grid>
