@@ -361,7 +361,7 @@ const Projects = () => {
 
       {/* Card grid — desktop + tablet */}
       {!sm && (
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence exitBeforeEnter>
           <motion.div
             key={activeFilter}
             variants={staggerContainer(shouldReduce ? 0 : 0.07)}
@@ -388,7 +388,7 @@ const Projects = () => {
 
       {/* Mobile: native scroll-snap */}
       {sm && (
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence exitBeforeEnter>
           <motion.div
             key={activeFilter}
             initial={{ opacity: 0 }}
