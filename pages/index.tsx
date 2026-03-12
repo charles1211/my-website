@@ -1,7 +1,6 @@
 import { Box, Button, Divider, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 import type { NextPage } from 'next';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { BsDownload, BsCheck2 } from 'react-icons/bs';
 import {
   SiTypescript, SiJavascript, SiNodedotjs, SiReact, SiNextdotjs,
@@ -20,13 +19,10 @@ import Projects from '../components/projects';
 import { colors } from '../styles/theme/colors';
 import Footer from '../components/footer';
 import Contacts from '../components/contact';
-import ScrollToTopButton from '../common/scrollToTopButton';
 
 const roles = ['Full-Stack Developer', 'Frontend Developer', 'Backend Developer', 'Problem Solver'];
 
 const Home: NextPage = () => {
-  const router = useRouter();
-
   const theme = useTheme();
   const xl = useMediaQuery(theme.breakpoints.down('xl'));
   const sm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -210,7 +206,6 @@ const Home: NextPage = () => {
               justifyContent='center'
               xs={12}
               lg={6}
-              data-aos={sm ? '' : 'fade-left'}
             >
               <Grid item xs={12} lg={12}>
                 {/* Animated "Hello." heading */}
@@ -358,7 +353,6 @@ const Home: NextPage = () => {
               justifyContent='center'
               xs={12}
               lg={6}
-              data-aos={sm ? '' : 'fade-right'}
             >
               <Box sx={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: { lg: 0, xs: 4 } }}>
 
@@ -549,7 +543,6 @@ const Home: NextPage = () => {
         <Footer />
       </Grid>
 
-      <ScrollToTopButton />
     </>
   );
 };

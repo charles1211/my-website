@@ -9,9 +9,9 @@ const ScrollToTopButton = ({}: ScrollToTopButtonProps) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    document.addEventListener('scroll', function (e) {
-      toggleVisibility();
-    });
+    const handler = () => toggleVisibility();
+    document.addEventListener('scroll', handler, { passive: true });
+    return () => document.removeEventListener('scroll', handler);
   }, []);
 
   function toggleVisibility() {

@@ -105,7 +105,6 @@ const Contacts = () => {
   return (
     <Grid
       container justifyContent="center" item xs={12}
-      data-aos="zoom-in-up"
       sx={{ mt: { lg: 10, xs: 5 }, mb: { lg: 20, xs: 8 } }}
     >
       <Grid item xs={12} lg={10}>

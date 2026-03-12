@@ -25,7 +25,7 @@ import Head from 'next/head';
 
 // Note: react-multi-carousel/lib/styles.css import removed — carousel replaced with scroll-snap
 // Note: Header import removed — replaced by Navbar below
-// Note: Footer and ScrollToTopButton are rendered from pages/index.tsx, not _app.tsx
+// Note: Footer (including ScrollToTopButton) is rendered from pages/index.tsx via the Footer component
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
@@ -53,7 +53,7 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
         <meta property='og:url' content='https://charlescabarrus.vercel.app/' />
         <title>Charles Portfolio</title>
         <link rel='icon' href='/images/crc-logo.png' />
-        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap' />
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@300;400;600;700&display=swap' />
       </Head>
 
       {/* MagneticCursor: FIRST child, OUTSIDE ThemeProvider — needs no MUI context (spec Section 2.1) */}
