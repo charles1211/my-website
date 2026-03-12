@@ -1,7 +1,7 @@
 // components/contact.tsx
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { colors } from '../styles/theme/colors';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { MdEmail } from 'react-icons/md';
@@ -13,11 +13,14 @@ import { safeFadeUp } from '../lib/motionVariants';
 // ─── Confetti burst ────────────────────────────────────────────────────────────
 const CONFETTI_COLORS = [colors.tomato, colors.orange, '#61DAFB', '#3ECF8E', '#A78BFA'];
 
+const CONFETTI_PARTICLES = Array.from({ length: 12 }, (_, i) => ({
+  angle: (i / 12) * 2 * Math.PI,
+  dist: 60 + Math.random() * 40,
+}));
+
 const ConfettiBurst = () => (
   <>
-    {Array.from({ length: 12 }).map((_, i) => {
-      const angle = (i / 12) * 2 * Math.PI;
-      const dist  = 60 + Math.random() * 40;
+    {CONFETTI_PARTICLES.map(({ angle, dist }, i) => {
       return (
         <motion.div
           key={i}
@@ -68,6 +71,9 @@ const Contacts = () => {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false); // drives confetti burst
+  const confettiTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => { if (confettiTimer.current) clearTimeout(confettiTimer.current); }, []);
 
   // ── Business logic — UNCHANGED from original ─────────────────────────────────
   function isValidEmail(email: string) {
@@ -90,7 +96,7 @@ const Contacts = () => {
     toast.success('Email sent!');
     // ── Only addition: trigger confetti, auto-reset after animation completes ──
     setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 900);
+    confettiTimer.current = setTimeout(() => setSubmitted(false), 900);
 
     setInitialValue({ email: 'charlescabarrus99@gmail.com', sender: '', subject: '', message: '' });
   }
