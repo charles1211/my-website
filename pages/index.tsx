@@ -354,13 +354,11 @@ const Home: NextPage = () => {
               xs={12}
               lg={6}
             >
-              <Box sx={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: { lg: 0, xs: 4 } }}>
+              <Box sx={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: { lg: 0, xs: 4 }, overflow: { xs: 'hidden', lg: 'visible' } }}>
 
                 {/* Rotating glow blob behind image */}
-                <motion.div
+                <div
                   aria-hidden="true"
-                  animate={shouldReduce ? {} : { rotate: 360 }}
-                  transition={{ duration: 9, repeat: Infinity, ease: 'linear' }}
                   style={{
                     position: 'absolute',
                     width: '115%',
@@ -369,78 +367,64 @@ const Home: NextPage = () => {
                     background: 'conic-gradient(from 0deg, rgba(255,113,91,0.33), rgba(138,92,255,0.33), rgba(0,255,209,0.21), rgba(255,113,91,0.33))',
                     filter: 'blur(22px)',
                     zIndex: 0,
+                    animation: shouldReduce ? undefined : 'orbit-spin 9s linear infinite',
                   }}
                 />
 
-                {/* Dashed orbit ring */}
-                <motion.div
-                  aria-hidden="true"
-                  animate={shouldReduce ? {} : { rotate: 360 }}
-                  transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-                  style={{
-                    position: 'absolute',
-                    width: 465,
-                    height: 465,
-                    borderRadius: '50%',
-                    border: '1.5px dashed rgba(255,113,91,0.27)',
-                    zIndex: 0,
-                  }}
-                />
-
-                {/* Orbiting tech icons — desktop only */}
-                {!shouldReduce && orbitIcons.map(({ Icon, color, radius, duration, initialAngle }, i) => (
-                  <Box
-                    key={i}
-                    sx={{
-                      display: { xs: 'none', lg: 'block' },
+                {/* Dashed orbit ring — hidden on mobile to prevent overflow */}
+                {!sm && (
+                  <div
+                    aria-hidden="true"
+                    style={{
                       position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      width: 0,
-                      height: 0,
-                      zIndex: 3,
+                      width: 465,
+                      height: 465,
+                      borderRadius: '50%',
+                      border: '1.5px dashed rgba(255,113,91,0.27)',
+                      zIndex: 0,
+                      animation: shouldReduce ? undefined : 'orbit-spin 18s linear infinite',
                     }}
-                  >
-                    {/* Outer ring rotates — initial angle sets starting position, target is +360 for full orbit */}
-                    <motion.div
-                      initial={{ rotate: initialAngle }}
-                      animate={{ rotate: initialAngle + 360 }}
-                      transition={{ duration, repeat: Infinity, ease: 'linear' }}
-                      style={{ position: 'absolute', width: 0, height: 0 }}
+                  />
+                )}
+
+                {/* Orbiting tech icons — desktop only, CSS animations for GPU efficiency */}
+                {!shouldReduce && orbitIcons.map(({ Icon, color, radius, duration, initialAngle }, i) => {
+                  const delay = `${-(duration * initialAngle / 360).toFixed(2)}s`;
+                  return (
+                    <Box
+                      key={i}
+                      sx={{ display: { xs: 'none', lg: 'block' }, position: 'absolute', top: '50%', left: '50%', width: 0, height: 0, zIndex: 3 }}
                     >
-                      {/* Counter-rotate icon to keep it upright */}
-                      <motion.div
-                        initial={{ rotate: -initialAngle }}
-                        animate={{ rotate: -(initialAngle + 360) }}
-                        transition={{ duration, repeat: Infinity, ease: 'linear' }}
-                        style={{
-                          position: 'absolute',
-                          left: radius,
-                          top: -20,
-                          width: 40,
-                          height: 40,
-                          borderRadius: '50%',
-                          background: 'rgba(10,16,30,0.85)',
-                          border: `1px solid ${color}55`,
-                          backdropFilter: 'blur(8px)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          boxShadow: `0 4px 20px ${color}30`,
-                        }}
-                      >
-                        <Icon style={{ fontSize: 18, color }} />
-                      </motion.div>
-                    </motion.div>
-                  </Box>
-                ))}
+                      <div style={{ position: 'absolute', width: 0, height: 0, animation: `orbit-spin ${duration}s linear infinite`, animationDelay: delay }}>
+                        <div
+                          style={{
+                            position: 'absolute',
+                            left: radius,
+                            top: -20,
+                            width: 40,
+                            height: 40,
+                            borderRadius: '50%',
+                            background: 'rgba(10,16,30,0.85)',
+                            border: `1px solid ${color}55`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: `0 4px 20px ${color}30`,
+                            animation: `orbit-counter ${duration}s linear infinite`,
+                            animationDelay: delay,
+                          }}
+                        >
+                          <Icon style={{ fontSize: 18, color }} />
+                        </div>
+                      </div>
+                    </Box>
+                  );
+                })}
 
                 {/* Profile image */}
                 <motion.img
                   src='./images/charles.jpg'
                   alt='Charles Cabarrus - Full-Stack Developer'
-                  animate={shouldReduce ? {} : { y: [0, -18, 0] }}
-                  transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
                   whileHover={{ filter: 'grayscale(0%)', boxShadow: '0 0 130px rgba(255,113,91,0.5)' }}
                   style={{
                     position: 'relative',
@@ -454,6 +438,7 @@ const Home: NextPage = () => {
                     boxShadow: '0 0 80px rgba(255,113,91,0.2)',
                     transition: 'filter 0.6s ease, box-shadow 0.6s ease',
                     maxWidth: '100%',
+                    animation: shouldReduce ? undefined : 'float-hero 4.8s ease-in-out infinite',
                   }}
                 />
               </Box>

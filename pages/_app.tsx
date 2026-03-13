@@ -16,7 +16,6 @@ import createEmotionCache from '../utility/createEmotionCache';
 import lightThemeOptions from '../styles/theme/lightThemeOptions';
 import '../styles/globals.css';
 import Navbar from '../components/Navbar';
-import MagneticCursor from '../components/MagneticCursor';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { ToastContainer, Zoom } from 'react-toastify';
@@ -56,10 +55,7 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
         <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@300;400;600;700&display=swap' />
       </Head>
 
-      {/* MagneticCursor: FIRST child, OUTSIDE ThemeProvider — needs no MUI context (spec Section 2.1) */}
-      <MagneticCursor />
-
-      {/* Background: fixed, behind all content — rendered after MagneticCursor per spec ordering */}
+      {/* Background: fixed, behind all content */}
       <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}>
         <ColorBends
           colors={['#ff5c7a', '#8a5cff', '#00ffd1']}

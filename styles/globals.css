@@ -61,6 +61,18 @@ a {
   50%       { opacity: 0.10; }
 }
 
+/* Orbit & float — CSS compositor animations (replaces framer-motion RAF loops) */
+@keyframes orbit-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes orbit-counter {
+  to { transform: rotate(-360deg); }
+}
+@keyframes float-hero {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-18px); }
+}
+
 /* ScrollToTopButton fade-in */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }

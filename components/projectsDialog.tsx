@@ -6,6 +6,7 @@ import {
   DialogContentText,
   DialogActions,
   Button,
+  Chip,
   Grid,
   Typography,
   Box,
@@ -27,7 +28,7 @@ const ProjectsDialog = ({ isOpen, onClose, data }: ProjectsDialogProps) => {
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
       fullWidth
-      maxWidth={'xs'}
+      maxWidth={'sm'}
       PaperProps={{
         sx: {
           borderRadius: '20px',
@@ -67,6 +68,35 @@ const ProjectsDialog = ({ isOpen, onClose, data }: ProjectsDialogProps) => {
               >
                 {data.name}
               </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography
+                sx={{
+                  color: colors.textSecondary,
+                  fontSize: '0.95rem',
+                  lineHeight: 1.7,
+                }}
+              >
+                {data.description}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8 }}>
+                {data.techStack.map((tech, i) => (
+                  <Chip
+                    key={i}
+                    label={tech}
+                    size='small'
+                    sx={{
+                      backgroundColor: 'rgba(255,113,91,0.08)',
+                      color: colors.textSecondary,
+                      fontSize: 11,
+                      borderRadius: '6px',
+                      border: `1px solid ${colors.glow}`,
+                    }}
+                  />
+                ))}
+              </Box>
             </Grid>
             {data.type && (
               <Grid item xs={12}>
