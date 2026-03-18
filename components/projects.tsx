@@ -192,7 +192,7 @@ interface ProjectCardProps {
   shouldReduce: boolean;
 }
 
-const ProjectCard = React.memo(({ data: x, onMoreInfo, shouldReduce }: ProjectCardProps) => {
+const ProjectCard = React.memo(function ProjectCard({ data: x, onMoreInfo, shouldReduce }: ProjectCardProps) {
   const { ref, rotateXSpring, rotateYSpring, onMouseMove, onMouseLeave } = use3DTilt(10);
   const [hovered, setHovered] = useState(false);
   const isPublic = x.visibility !== 'private' && x.projectLink;

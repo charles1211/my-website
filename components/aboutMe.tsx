@@ -37,7 +37,7 @@ function useCountUp(target: number, duration = 1500) {
 // ─── StatCard ──────────────────────────────────────────────────────────────────
 interface StatCardProps { value: number; symbol: string; label: string; }
 
-const StatCard = memo(({ value, symbol, label }: StatCardProps) => {
+const StatCard = memo(function StatCard({ value, symbol, label }: StatCardProps) {
   const { count, ref: countRef } = useCountUp(value);
   const { ref, rotateXSpring, rotateYSpring, onMouseMove, onMouseLeave } = use3DTilt(10);
 
@@ -73,7 +73,7 @@ const StatCard = memo(({ value, symbol, label }: StatCardProps) => {
 // ─── ServiceCard ───────────────────────────────────────────────────────────────
 interface ServiceCardProps { Icon: IconType; title: string; description: string; }
 
-const ServiceCard = memo(({ Icon, title, description }: ServiceCardProps) => (
+const ServiceCard = memo(function ServiceCard({ Icon, title, description }: ServiceCardProps) { return (
   <Box
     sx={{
       p: '28px', borderRadius: '20px',
@@ -105,7 +105,7 @@ const ServiceCard = memo(({ Icon, title, description }: ServiceCardProps) => (
     <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>{title}</Typography>
     <Typography variant="body2" sx={{ color: colors.textSecondary, lineHeight: 1.7 }}>{description}</Typography>
   </Box>
-));
+); });
 
 // ─── Data ──────────────────────────────────────────────────────────────────────
 const services: Array<{ Icon: IconType; title: string; description: string }> = [
