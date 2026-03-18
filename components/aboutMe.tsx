@@ -1,5 +1,5 @@
 // components/aboutMe.tsx
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { Box, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { motion, useInView, useReducedMotion } from 'framer-motion';
 import type { IconType } from 'react-icons';
@@ -37,7 +37,7 @@ function useCountUp(target: number, duration = 1500) {
 // ─── StatCard ──────────────────────────────────────────────────────────────────
 interface StatCardProps { value: number; symbol: string; label: string; }
 
-const StatCard = ({ value, symbol, label }: StatCardProps) => {
+const StatCard = memo(({ value, symbol, label }: StatCardProps) => {
   const { count, ref: countRef } = useCountUp(value);
   const { ref, rotateXSpring, rotateYSpring, onMouseMove, onMouseLeave } = use3DTilt(10);
 
@@ -68,12 +68,12 @@ const StatCard = ({ value, symbol, label }: StatCardProps) => {
       </Box>
     </motion.div>
   );
-};
+});
 
 // ─── ServiceCard ───────────────────────────────────────────────────────────────
 interface ServiceCardProps { Icon: IconType; title: string; description: string; }
 
-const ServiceCard = ({ Icon, title, description }: ServiceCardProps) => (
+const ServiceCard = memo(({ Icon, title, description }: ServiceCardProps) => (
   <Box
     sx={{
       p: '28px', borderRadius: '20px',
@@ -105,7 +105,7 @@ const ServiceCard = ({ Icon, title, description }: ServiceCardProps) => (
     <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>{title}</Typography>
     <Typography variant="body2" sx={{ color: colors.textSecondary, lineHeight: 1.7 }}>{description}</Typography>
   </Box>
-);
+));
 
 // ─── Data ──────────────────────────────────────────────────────────────────────
 const services: Array<{ Icon: IconType; title: string; description: string }> = [
@@ -128,10 +128,15 @@ const AboutMe = () => {
   const shouldReduce = useReducedMotion();
   const bioRef = useRef<HTMLDivElement>(null);
   const bioInView = useInView(bioRef, { once: true, amount: 0.3 });
-  const bioWords = BIO.split(' ');
+  const bioChunks = BIO.split(' ').reduce<string[][]>((acc, word, i) => {
+    const chunkIdx = Math.floor(i / 5);
+    if (!acc[chunkIdx]) acc[chunkIdx] = [];
+    acc[chunkIdx].push(word);
+    return acc;
+  }, []);
 
   return (
-    <Grid container item xs={12} spacing={{ lg: 4, xs: 3 }}>
+    <Grid container item xs={12} spacing={3}>
       {/* Left: Bio + Stats */}
       <Grid item xs={12} lg={6}>
         <motion.div
@@ -174,15 +179,15 @@ const AboutMe = () => {
               </motion.div>
             ) : (
               <p style={{ fontFamily: '"Roboto Slab",serif', color: colors.textSecondary, fontSize: '1.25rem', lineHeight: 1.8, margin: 0, display: 'flex', flexWrap: 'wrap', gap: '0 6px' }}>
-                {bioWords.map((word, i) => (
+                {bioChunks.map((chunk, i) => (
                   <motion.span
                     key={i}
                     initial={{ opacity: 0, y: 10 }}
                     animate={bioInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ delay: i * 0.015, duration: 0.3 }}
+                    transition={{ delay: i * 0.06, duration: 0.3 }}
                     style={{ display: 'inline-block' }}
                   >
-                    {word}
+                    {chunk.join(' ')}
                   </motion.span>
                 ))}
               </p>

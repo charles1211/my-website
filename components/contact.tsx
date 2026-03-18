@@ -108,7 +108,7 @@ const Contacts = () => {
       sx={{ mt: { lg: 10, xs: 5 }, mb: { lg: 20, xs: 8 } }}
     >
       <Grid item xs={12} lg={10}>
-        <Grid container item xs={12} spacing={{ lg: 6, xs: 3 }}>
+        <Grid container item xs={12} spacing={3}>
 
           {/* Left: CTA + quick contacts */}
           <Grid item xs={12} lg={6}>

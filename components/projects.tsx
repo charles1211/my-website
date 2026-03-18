@@ -192,7 +192,7 @@ interface ProjectCardProps {
   shouldReduce: boolean;
 }
 
-const ProjectCard = ({ data: x, onMoreInfo, shouldReduce }: ProjectCardProps) => {
+const ProjectCard = React.memo(({ data: x, onMoreInfo, shouldReduce }: ProjectCardProps) => {
   const { ref, rotateXSpring, rotateYSpring, onMouseMove, onMouseLeave } = use3DTilt(10);
   const [hovered, setHovered] = useState(false);
   const isPublic = x.visibility !== 'private' && x.projectLink;
@@ -278,18 +278,7 @@ const ProjectCard = ({ data: x, onMoreInfo, shouldReduce }: ProjectCardProps) =>
         >
           {x.description}
         </Typography>
-        {isPublic ? (
-          <Button
-            data-magnetic
-            onClick={() => window.open(x.projectLink, '_blank', 'noopener,noreferrer')}
-            sx={{ color: 'white', p: 0, textTransform: 'none', '&:hover': { color: colors.tomato } }}
-          >
-            <Typography sx={{ fontSize: 14, fontWeight: 500, textDecoration: 'underline', textDecorationColor: colors.tomato, textUnderlineOffset: 5 }}>
-              View project
-            </Typography>
-            <GoArrowUpRight style={{ marginLeft: 4, fontSize: 18 }} />
-          </Button>
-        ) : (
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
           <Button
             data-magnetic
             onClick={() => onMoreInfo(x)}
@@ -299,11 +288,23 @@ const ProjectCard = ({ data: x, onMoreInfo, shouldReduce }: ProjectCardProps) =>
               More Info
             </Typography>
           </Button>
-        )}
+          {isPublic && (
+            <Button
+              data-magnetic
+              onClick={() => window.open(x.projectLink, '_blank', 'noopener,noreferrer')}
+              sx={{ color: 'white', p: 0, textTransform: 'none', '&:hover': { color: colors.tomato } }}
+            >
+              <Typography sx={{ fontSize: 14, fontWeight: 500, textDecoration: 'underline', textDecorationColor: colors.tomato, textUnderlineOffset: 5 }}>
+                View project
+              </Typography>
+              <GoArrowUpRight style={{ marginLeft: 4, fontSize: 18 }} />
+            </Button>
+          )}
+        </Box>
       </motion.div>
     </motion.div>
   );
-};
+});
 
 // ─── Projects ──────────────────────────────────────────────────────────────────
 const Projects = () => {
