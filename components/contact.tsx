@@ -202,13 +202,18 @@ const Contacts = () => {
               whileInView="show"
               viewport={{ once: true }}
             >
+              {/* Gradient border wrapper — 1.5px gradient visible through padding */}
+              <Box sx={{
+                p: '1.5px', borderRadius: '21px',
+                background: 'linear-gradient(135deg, rgba(255,113,91,0.55) 0%, rgba(124,58,237,0.35) 50%, rgba(252,163,17,0.55) 100%)',
+                boxShadow: '0 25px 60px rgba(0,0,0,0.35), 0 0 40px rgba(255,113,91,0.08)',
+              }}>
               <Box
                 sx={{
                   p: { lg: 4, xs: 3 }, borderRadius: '20px',
-                  background: 'rgba(26,45,58,0.6)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255,113,91,0.2)',
-                  boxShadow: 'inset 0 1px 0 rgba(255,113,91,0.15)',
+                  background: 'rgba(11,20,30,0.94)',
+                  backdropFilter: 'blur(28px)',
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 0 rgba(0,0,0,0.2)',
                 }}
               >
                 <Grid container spacing={3}>
@@ -248,8 +253,16 @@ const Contacts = () => {
                           textTransform: 'none', fontSize: { lg: 18, xs: 16 },
                           fontWeight: 600, letterSpacing: '0.02em',
                           boxShadow: '0 8px 24px rgba(255,113,91,0.3)',
+                          position: 'relative', overflow: 'hidden',
                           transition: 'all 0.3s ease',
-                          '&:hover': { background: `linear-gradient(135deg, ${colors.orange} 0%, ${colors.tomato} 100%)`, transform: 'translateY(-3px)', boxShadow: '0 12px 32px rgba(255,113,91,0.4)' },
+                          '&::after': {
+                            content: '""', position: 'absolute',
+                            top: 0, left: 0, width: '40%', height: '100%',
+                            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent)',
+                            transform: 'translateX(-200%) skewX(-20deg)',
+                          },
+                          '&:hover::after': { animation: 'shimmerSlide 0.6s ease forwards' },
+                          '&:hover': { transform: 'translateY(-3px)', boxShadow: '0 12px 36px rgba(255,113,91,0.45)' },
                           '&:active': { transform: 'translateY(-1px)' },
                         }}
                       >
@@ -258,6 +271,7 @@ const Contacts = () => {
                     </Box>
                   </Grid>
                 </Grid>
+              </Box>
               </Box>
             </motion.div>
           </Grid>

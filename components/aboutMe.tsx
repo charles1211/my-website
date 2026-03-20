@@ -53,14 +53,25 @@ const StatCard = memo(function StatCard({ value, symbol, label }: StatCardProps)
         ref={countRef}
         sx={{
           p: { lg: 3, xs: 2 }, borderRadius: '16px',
-          backgroundColor: 'rgba(255,113,91,0.05)',
+          background: 'rgba(255,113,91,0.04)',
           border: `1px solid ${colors.glow}`, height: '100%',
+          position: 'relative', overflow: 'hidden',
           transition: 'all 0.4s cubic-bezier(0.4,0,0.2,1)',
-          '&:hover': { backgroundColor: 'rgba(255,113,91,0.1)', boxShadow: `0 12px 24px ${colors.glow}`, borderColor: colors.tomato },
+          '&:hover': {
+            background: 'rgba(255,113,91,0.09)',
+            boxShadow: `0 12px 30px ${colors.glow}, 0 0 0 1px ${colors.tomato}40`,
+            borderColor: colors.tomato,
+            transform: 'translateY(-4px)',
+          },
         }}
       >
         <Typography align="center" sx={{ fontWeight: 700, fontSize: { lg: 55, xs: 30 }, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
-          {count} <span style={{ color: colors.tomato }}>{symbol}</span>
+          <Box component="span" sx={{
+            background: `linear-gradient(135deg, ${colors.tomato} 0%, ${colors.orange} 100%)`,
+            backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+          }}>
+            {count}{symbol}
+          </Box>
         </Typography>
         <Typography align="center" sx={{ fontFamily: 'Roboto Slab', fontSize: { lg: 20, xs: 13 }, mt: 1, color: colors.textSecondary }}>
           {label}
@@ -77,26 +88,39 @@ const ServiceCard = memo(function ServiceCard({ Icon, title, description }: Serv
   <Box
     sx={{
       p: '28px', borderRadius: '20px',
-      background: 'rgba(26,45,58,0.8)',
-      backdropFilter: 'blur(16px)',
+      background: 'rgba(18,28,38,0.75)',
+      backdropFilter: 'blur(20px)',
       border: '1px solid rgba(255,113,91,0.15)',
       position: 'relative', overflow: 'hidden',
-      // Animated border trace: clip-path reveal on hover
+      transition: 'border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease',
+      '&:hover': {
+        borderColor: 'rgba(255,113,91,0.35)',
+        background: 'rgba(24,38,52,0.85)',
+        boxShadow: '0 20px 50px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,113,91,0.15)',
+      },
+      // Animated gradient border trace on hover
       '&::before': {
         content: '""', position: 'absolute', inset: 0,
         borderRadius: '20px',
         border: '1px solid transparent',
         backgroundOrigin: 'border-box',
-        // Standard + webkit mask for Firefox + Chrome
         mask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
         maskComposite: 'exclude',
         WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
         WebkitMaskComposite: 'destination-out',
-        backgroundImage: `linear-gradient(rgba(255,113,91,0.6), rgba(252,163,17,0.6))`,
+        backgroundImage: `linear-gradient(135deg, rgba(255,113,91,0.7), rgba(124,58,237,0.5), rgba(252,163,17,0.7))`,
         transition: 'opacity 0.4s ease',
         opacity: 0,
       },
       '&:hover::before': { opacity: 1 },
+      // Shimmer sweep on hover
+      '&::after': {
+        content: '""', position: 'absolute',
+        top: '-50%', left: '-80%', width: '50%', height: '200%',
+        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent)',
+        transform: 'skewX(-20deg)', pointerEvents: 'none',
+      },
+      '&:hover::after': { animation: 'shimmerSlide 0.8s ease forwards' },
     }}
   >
     <Box sx={{ p: 1.5, borderRadius: '12px', background: 'rgba(255,113,91,0.1)', display: 'inline-flex', mb: 2 }}>

@@ -5,7 +5,7 @@ import { CacheProvider, EmotionCache } from '@emotion/react';
 import { ThemeProvider, CssBaseline, createTheme } from '@mui/material';
 import dynamic from 'next/dynamic';
 
-const ColorBends = dynamic(() => import('../components/ColorBends'), { ssr: false });
+const SoftAurora = dynamic(() => import('../components/SoftAurora'), { ssr: false });
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -55,13 +55,23 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
         <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Slab:wght@300;400;600;700&display=swap' />
       </Head>
 
-      {/* Background: fixed, behind all content */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}>
-        <ColorBends
-          colors={['#ff5c7a', '#8a5cff', '#00ffd1']}
-          rotation={0} speed={0.5} scale={1} frequency={1.2}
-          warpStrength={1} mouseInfluence={1} parallax={1.25}
-          noise={0.1} transparent autoRotate={0}
+      {/* SoftAurora — WebGL aurora background, fixed behind all content */}
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1, pointerEvents: 'none' }}>
+        <SoftAurora
+          speed={0.6}
+          scale={1.5}
+          brightness={1}
+          color1="#f7f7f7"
+          color2="#e100ff"
+          noiseFrequency={2.5}
+          noiseAmplitude={1}
+          bandHeight={0.5}
+          bandSpread={1}
+          octaveDecay={0.1}
+          layerOffset={0}
+          colorSpeed={1}
+          enableMouseInteraction
+          mouseInfluence={0.25}
         />
       </div>
 

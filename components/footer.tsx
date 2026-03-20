@@ -55,7 +55,7 @@ const Footer = ({}: FooterProps) => {
       <Grid
         container item xs={12}
         sx={{
-          backgroundColor: colors.lightBlue,
+          background: `linear-gradient(180deg, rgba(10,18,26,0.99) 0%, ${colors.lightBlue} 55%, rgba(12,20,28,1) 100%)`,
           position: 'relative',
           pt: 6, pb: 4,
           pl: { lg: 0, xs: 2 },

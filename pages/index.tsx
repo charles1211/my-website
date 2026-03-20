@@ -22,6 +22,42 @@ import Contacts from '../components/contact';
 
 const roles = ['Full-Stack Developer', 'Frontend Developer', 'Backend Developer', 'Problem Solver'];
 
+// ─── Ambient background orbs (fixed, decorative) ───────────────────────────────
+const AmbientOrbs = () => (
+  <Box aria-hidden="true" sx={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: -1 }}>
+    <Box sx={{
+      position: 'absolute', width: { lg: 650, xs: 300 }, height: { lg: 650, xs: 300 },
+      borderRadius: '50%', left: '-8%', top: '5%',
+      background: 'radial-gradient(circle, rgba(255,113,91,0.13) 0%, transparent 70%)',
+      filter: 'blur(50px)', animation: 'glowPulse 9s ease-in-out infinite',
+    }} />
+    <Box sx={{
+      position: 'absolute', width: { lg: 550, xs: 250 }, height: { lg: 550, xs: 250 },
+      borderRadius: '50%', right: '-6%', top: '18%',
+      background: 'radial-gradient(circle, rgba(124,58,237,0.09) 0%, transparent 70%)',
+      filter: 'blur(60px)', animation: 'glowPulse 11s ease-in-out infinite 2.5s',
+    }} />
+    <Box sx={{
+      position: 'absolute', width: { lg: 700, xs: 300 }, height: { lg: 400, xs: 200 },
+      borderRadius: '50%', left: '28%', bottom: '8%',
+      background: 'radial-gradient(circle, rgba(6,182,212,0.07) 0%, transparent 70%)',
+      filter: 'blur(70px)', animation: 'glowPulse 13s ease-in-out infinite 5s',
+    }} />
+  </Box>
+);
+
+// ─── Glowing gradient section divider ──────────────────────────────────────────
+const GlowDivider = ({ color = colors.tomato }: { color?: string }) => (
+  <Box sx={{ px: { lg: 20, xs: 3 }, py: { lg: 3, xs: 2 } }}>
+    <Box sx={{
+      height: '1px',
+      background: `linear-gradient(90deg, transparent 0%, ${color}55 25%, ${colors.orange}55 50%, ${color}55 75%, transparent 100%)`,
+      borderRadius: 1,
+      boxShadow: `0 0 20px ${color}25, 0 0 40px ${color}10`,
+    }} />
+  </Box>
+);
+
 const Home: NextPage = () => {
   const theme = useTheme();
   const xl = useMediaQuery(theme.breakpoints.down('xl'));
@@ -32,13 +68,7 @@ const Home: NextPage = () => {
   const [displayText, setDisplayText] = useState('');
   const [roleIndex, setRoleIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [showCursor, setShowCursor] = useState(true);
   const [dlState, setDlState] = useState<'idle' | 'loading' | 'done'>('idle');
-
-  useEffect(() => {
-    const t = setInterval(() => setShowCursor((p) => !p), 530);
-    return () => clearInterval(t);
-  }, []);
 
   useEffect(() => {
     const role = roles[roleIndex];
@@ -174,6 +204,8 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <AmbientOrbs />
+
       {/* Hero Section */}
       <Grid
         container
@@ -195,6 +227,24 @@ const Home: NextPage = () => {
             backgroundSize: '32px 32px',
             animation: 'breathe 4s ease-in-out infinite',
             opacity: 0.06,
+          }}
+        />
+
+        {/* Hero left-side spotlight glow */}
+        <Box
+          aria-hidden="true"
+          sx={{
+            position: 'absolute',
+            width: { lg: 750, xs: 350 },
+            height: { lg: 750, xs: 350 },
+            borderRadius: '50%',
+            left: { lg: '-8%', xs: '-25%' },
+            top: { lg: '-25%', xs: '-15%' },
+            background: 'radial-gradient(circle, rgba(255,113,91,0.11) 0%, rgba(124,58,237,0.06) 45%, transparent 70%)',
+            filter: 'blur(80px)',
+            pointerEvents: 'none',
+            zIndex: 0,
+            animation: 'glowPulse 8s ease-in-out infinite',
           }}
         />
 
@@ -299,8 +349,7 @@ const Home: NextPage = () => {
                         marginLeft: '4px',
                         verticalAlign: 'middle',
                         borderRadius: '2px',
-                        opacity: showCursor ? 1 : 0,
-                        transition: 'opacity 0.08s',
+                        animation: 'cursorBlink 1.06s step-end infinite',
                       }}
                     />
                   </Typography>
@@ -462,16 +511,7 @@ const Home: NextPage = () => {
 
       <ScrollIndicator />
 
-      {/* Section separator */}
-      <Box
-        sx={{
-          width: '100%',
-          height: 60,
-          clipPath: 'polygon(0 0, 100% 0, 100% 60%, 0 100%)',
-          background: 'linear-gradient(135deg, rgba(255,113,91,0.06), transparent)',
-          mt: -1,
-        }}
-      />
+      <GlowDivider />
 
       {/* Tech Stack Section */}
       <Box sx={{ py: { lg: 10, xs: 6 }, px: { lg: 20, xs: 3 } }}>
@@ -506,6 +546,8 @@ const Home: NextPage = () => {
         </motion.div>
       </Box>
 
+      <GlowDivider />
+
       {/* About Section */}
       <Grid container justifyContent='center' item xs={12}>
         <Grid item xs={10} sx={{ mt: { lg: 20, xs: 8 } }} id='about-section'>
@@ -513,10 +555,14 @@ const Home: NextPage = () => {
         </Grid>
       </Grid>
 
+      <GlowDivider color={colors.orange} />
+
       {/* Projects Section */}
       <Grid item xs={12} sx={{ p: { lg: 20, xs: 5 }, mt: { lg: 0, xs: 10 } }} id='project-section'>
         <Projects />
       </Grid>
+
+      <GlowDivider />
 
       {/* Contact Section */}
       <Grid item xs={12} id='contact-section'>
@@ -590,7 +636,7 @@ const SkillCard = ({ label, Icon, color }: SkillCardProps) => {
       ref={ref}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      style={{ rotateX: rotateXSpring, rotateY: rotateYSpring, transformStyle: 'preserve-3d' }}
+      style={{ rotateX: rotateXSpring, rotateY: rotateYSpring, transformStyle: 'preserve-3d', willChange: 'transform' }}
       whileHover={{ y: -10, scale: 1.05 }}
       variants={{ hidden: { y: 30, opacity: 0 }, show: { y: 0, opacity: 1, transition: { duration: 0.4 } } }}
     >
@@ -602,8 +648,21 @@ const SkillCard = ({ label, Icon, color }: SkillCardProps) => {
           background: 'rgba(255,113,91,0.04)',
           border: '1px solid rgba(255,113,91,0.12)',
           width: { lg: 90, xs: 70 }, height: { lg: 90, xs: 70 },
-          transition: 'border-color 0.3s, box-shadow 0.3s',
-          '&:hover': { borderColor: color, boxShadow: `0 8px 24px ${color}30` },
+          position: 'relative', overflow: 'hidden',
+          transition: 'border-color 0.3s, box-shadow 0.3s, background 0.3s',
+          '&:hover': {
+            borderColor: color,
+            boxShadow: `0 8px 32px ${color}40, 0 0 0 1px ${color}20`,
+            background: `${color}0A`,
+          },
+          '&::after': {
+            content: '""', position: 'absolute',
+            top: 0, left: 0, width: '45%', height: '100%',
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
+            transform: 'translateX(-200%) skewX(-20deg)',
+            pointerEvents: 'none',
+          },
+          '&:hover::after': { animation: 'shimmerSlide 0.55s ease forwards' },
         }}
       >
         <Icon style={{ fontSize: 36, color }} />
@@ -614,3 +673,4 @@ const SkillCard = ({ label, Icon, color }: SkillCardProps) => {
     </motion.div>
   );
 };
+
