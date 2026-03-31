@@ -403,7 +403,7 @@ const Home: NextPage = () => {
               xs={12}
               lg={6}
             >
-              <Box sx={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: { lg: 0, xs: 4 }, overflow: { xs: 'hidden', lg: 'visible' } }}>
+              <Box sx={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: { lg: 0, xs: 4 }, overflow: 'visible' }}>
 
                 {/* Rotating glow blob behind image */}
                 <div
@@ -508,8 +508,6 @@ const Home: NextPage = () => {
           </Grid>
         </Grid>
       </Grid>
-
-      <ScrollIndicator />
 
       <GlowDivider />
 

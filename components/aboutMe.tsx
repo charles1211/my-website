@@ -6,7 +6,6 @@ import type { IconType } from 'react-icons';
 import { CgWebsite } from 'react-icons/cg';
 import { MdPhoneAndroid, MdCloud } from 'react-icons/md';
 import { colors } from '../styles/theme/colors';
-import GhostNumber from './GhostNumber';
 import { use3DTilt } from '../hooks/use3DTilt';
 import { safeStaggerContainer, safeFadeUp, fadeRight } from '../lib/motionVariants';
 
@@ -176,7 +175,6 @@ const AboutMe = () => {
           </motion.div>
 
           <motion.div variants={safeFadeUp(0.05, shouldReduce ?? false)} style={{ position: 'relative', marginBottom: 24 }}>
-            <GhostNumber number="02" top="-30px" left="-10px" />
             <Typography
               sx={{
                 fontSize: { lg: 80, xs: 50 }, fontWeight: 700, letterSpacing: '-0.03em',

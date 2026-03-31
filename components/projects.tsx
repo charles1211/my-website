@@ -5,7 +5,6 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { GoArrowUpRight } from 'react-icons/go';
 import { colors } from '../styles/theme/colors';
 import ProjectsDialog from './projectsDialog';
-import GhostNumber from './GhostNumber';
 import { use3DTilt } from '../hooks/use3DTilt';
 import { staggerContainer, safeFadeUp } from '../lib/motionVariants';
 
@@ -24,6 +23,19 @@ export interface IData {
 }
 
 const data: IData[] = [
+  {
+    id: 12,
+    name: 'Serene Cove Hotel and Resort',
+    description: `A full-stack web application built with Next.js 14 App Router, TypeScript, Tailwind CSS, Drizzle ORM, and PostgreSQL, designed to deliver a seamless luxury hospitality experience from browsing to booking. The platform allows guests to explore curated rooms and packages, submit event and package enquiries with real-time form validation, and complete secure online payments via Stripe — all backed by a live database with structured data pipelines. An automated email system powered by Nodemailer sends branded confirmation emails to guests and instant notification tables to staff upon every enquiry or booking. The admin and staff dashboards provide role-based access for managing bookings, rooms, events, pricing, and guest accounts — giving the operations team full visibility and control over the resort's daily workflow. Every guest-facing page was intentionally designed with a premium editorial aesthetic — featuring Ken Burns hero animations, floating-label forms, scroll-reveal interactions, custom dropdowns, and confirmation dialogs — ensuring the digital experience matches the standard of a luxury property. The entire project is production-ready, deployed on Vercel with environment-based configuration, and structured for maintainability with clean API routes, shared component architecture, and type-safe database access throughout.`,
+    techStack: ['Next.js 14', 'React 18', 'TypeScript', 'Tailwind CSS', 'Lucide React', 'React Hook Form', 'Zod', 'Next.js API Routes', 'Drizzle ORM', 'PostgreSQL', 'Supabase Auth', 'Stripe', 'Nodemailer', 'Neon'],
+    gitLink: 'https://github.com/charles1211/hotel-resort-reservation.git',
+    projectLink: 'https://hotel-resort-reservation.vercel.app/',
+    thumbnail: '/images/serenecove.png',
+    visibility: 'public',
+    type: '',
+    responsibilities: [],
+    category: 'Full-Stack',
+  },
   {
     id: 9,
     name: 'InkSmith Studios',
@@ -220,7 +232,7 @@ const ProjectCard = React.memo(function ProjectCard({ data: x, onMoreInfo, shoul
       }}
       variants={{
         hidden: { y: 30, opacity: 0 },
-        show:   { y: 0,  opacity: 1, transition: { duration: 0.4 } },
+        show: { y: 0, opacity: 1, transition: { duration: 0.4 } },
       }}
     >
       {/* Thumbnail with zoom on hover */}
@@ -309,11 +321,11 @@ const ProjectCard = React.memo(function ProjectCard({ data: x, onMoreInfo, shoul
 // ─── Projects ──────────────────────────────────────────────────────────────────
 const Projects = () => {
   const theme = useTheme();
-  const sm   = useMediaQuery(theme.breakpoints.down('sm'));
-  const md   = useMediaQuery(theme.breakpoints.down('md'));
+  const sm = useMediaQuery(theme.breakpoints.down('sm'));
+  const md = useMediaQuery(theme.breakpoints.down('md'));
   const shouldReduce = useReducedMotion() ?? false;
   const [activeFilter, setActiveFilter] = useState<FilterCategory>('All');
-  const [openDialog,   setOpenDialog]   = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [selectedProj, setSelectedProj] = useState<IData | undefined>();
 
   const filtered = activeFilter === 'All' ? data : data.filter((p) => p.category === activeFilter);
@@ -323,9 +335,6 @@ const Projects = () => {
     <Grid item xs={12}>
       {/* Heading */}
       <Box sx={{ position: 'relative', mb: 2, textAlign: 'center' }}>
-        <Box sx={{ position: 'absolute', left: '50%', top: '-30px', transform: 'translateX(-50%)', pointerEvents: 'none', zIndex: 0 }}>
-          <GhostNumber number="03" left="0" top="0" />
-        </Box>
         <motion.div variants={safeFadeUp(0, shouldReduce)} initial="hidden" whileInView="show" viewport={{ once: true }}>
           <Typography align="center" sx={{ fontSize: { lg: 80, xs: 45 }, fontWeight: 600, letterSpacing: '-0.02em', position: 'relative', zIndex: 1 }}>
             Projects

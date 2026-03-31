@@ -7,7 +7,6 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { MdEmail } from 'react-icons/md';
 import { BsLinkedin } from 'react-icons/bs';
 import { FaGithub } from 'react-icons/fa';
-import GhostNumber from './GhostNumber';
 import { safeFadeUp } from '../lib/motionVariants';
 
 // ─── Confetti burst ────────────────────────────────────────────────────────────
@@ -119,7 +118,6 @@ const Contacts = () => {
               viewport={{ once: true }}
             >
               <Box sx={{ position: 'relative', mb: 2 }}>
-                <GhostNumber number="04" top="-20px" left="-10px" />
                 <Typography sx={{ fontSize: { lg: 18, xs: 16 }, color: colors.tomato, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', mb: 1, position: 'relative', zIndex: 1 }}>
                   Contacts
                 </Typography>
